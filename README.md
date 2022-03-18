@@ -1,4 +1,4 @@
-# ModiefiedHausdorffDistance
+# ModifiedHausdorffDistance
 
 ## Documentation
 
