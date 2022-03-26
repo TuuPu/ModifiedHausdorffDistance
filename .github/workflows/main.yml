@@ -40,5 +40,4 @@ jobs:
       - name: Coverage report to Codecov
         uses: codecov/codecov-action@v2
       - name: Lint
-        working-directory: MHD/src
         run: poetry run pylint src
