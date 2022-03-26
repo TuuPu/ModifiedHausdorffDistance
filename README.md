@@ -12,4 +12,5 @@
 ### Weekly reports
 
 [Week 1 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_1.md)
+
 [Week 2 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_2.md)
