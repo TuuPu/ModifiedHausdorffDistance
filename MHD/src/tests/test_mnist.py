@@ -62,4 +62,4 @@ class TestMnist(unittest.TestCase):
 
 # Print parts of the image_processing.py module are not tested because they work when you run the program. Also it
 # is not a feature which will stay in the program. It is only meant to be in the first release to show the progress
-# done. Tests can be for prints if wanted, though.  Test for codecov.
+# done. Tests can be for prints if wanted, though.
