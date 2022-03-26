@@ -52,3 +52,14 @@ class TestMnist(unittest.TestCase):
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
         images = image_processing.sort_images_and_threshold(x_train, y_train, True)
         self.assertTrue((images[0][0] == self.test_image).all())
+
+    def test_conditional_statement(self):
+        (x_train, y_train), (x_test, y_test) = mnist.load_data()
+        train_images = image_processing.sort_images_and_threshold(x_train, y_train, True)
+        self.assertEqual(len(train_images[0]), 1000)
+        test_images = image_processing.sort_images_and_threshold(x_test, y_test, False)
+        self.assertEqual(len(test_images[0]), 980)
+
+# Print parts of the image_processing.py module are not tested because they work when you run the program. Also it
+# is not a feature which will stay in the program. It is only meant to be in the first release to show the progress
+# done.
