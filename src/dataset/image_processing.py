@@ -56,14 +56,3 @@ def print_training_image():
 # module. I noticed it from the beginning when I tried to
 # just print the shapes of the datasets before writing the for
 # loop. So the for loop isn't the time consuming part here, it is keras.
-
-#Time used tuesday 10.00 - 17.00 with an hour long lunch break.
-# Mainly used my time to read about keras and how to use
-#mnist database (loading the data and how to actually handle it).
-# Another big time consumer was learning numpy. I haven't
-#used it before. So learning how to handle numpy arrays and such took a lot of time.
-
-#Time used saturday 12 - .... mostly used for modifying the sort_images_and_threshold
-# to get inputs to use it for both
-#training and testing. Rest of the time used for making unittests
-# and sorting out other requirements for the course.
