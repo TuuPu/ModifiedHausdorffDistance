@@ -1,4 +1,4 @@
-from dataset.mnist import *
+from dataset.image_processing import *
 
 def main():
     print_training_image()

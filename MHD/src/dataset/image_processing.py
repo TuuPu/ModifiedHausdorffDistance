@@ -14,22 +14,31 @@ import numpy as np
 # greyscale images, every pixel that has a value over 100 is turned to 1 (black) and every pixel that has a value
 # under 100 is turned to 0 (white).
 
-def sort_images_and_threshold():
-    train_pictures = []
+def sort_images_and_threshold(pictures, labels, test):
+    thresholded_images = []
     for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-        idxs = np.argwhere(y_train == i)
-        idxs = idxs[:1000]
-        tmp_figures = x_train[idxs, :, :]
+        idxs = np.argwhere(labels == i)
+        if test:
+            idxs = idxs[:1000]
+        else:
+            idxs = idxs[:10000]
+        tmp_figures = pictures[idxs, :, :]
         tmp_figures = np.where(tmp_figures <= 100, 0, 1)
-        train_pictures.append(tmp_figures)
-    return train_pictures
+        thresholded_images.append(tmp_figures)
+    return thresholded_images
+
+
 
 # Prints a binary image of the number 0. If we want to test this for number 8 for example, we just type
 # train_pictures[8][n], where n is a value between 0 and 999.
+# NOTE: test_pictures is here only to show that the function works for testing set too. It is not meant to be labeled
+# to the use of getting the answer. Testing will be done in a correct way, using k-nearest and MHD, as discussed.
 def print_training_image():
-    train_pictures = sort_images_and_threshold()
+    train_pictures = sort_images_and_threshold(x_train, y_train, True)
+    test_pictures = sort_images_and_threshold(x_test, y_test, False)
     k, n = input("Enter a number you want to view (0 to 9  range) and index number between 0 and 999: ").split()
     print('A picture of value ', k, ' printed below in binary form' + "\n" + str(train_pictures[int(k)][int(n)]))
+    print(test_pictures[0][0])
 
 # Additional comments:
 # Apparently keras is a bit of a heavy library and even without a simple for loop, it takes a few seconds to run this
@@ -39,3 +48,6 @@ def print_training_image():
 #Time used tuesday 10.00 - 17.00 with an hour long lunch break. Mainly used my time to read about keras and how to use
 #mnist database (loading the data and how to actually handle it). Another big time consumer was learning numpy. I haven't
 #used it before. So learning how to handle numpy arrays and such took a lot of time.
+
+#Time used saturday 12 - .... mostly used for modifying the sort_images_and_threshold to get inputs to use it for both
+#training and testing. Rest of the time used for making unittests and sorting out other requirements for the course.
