@@ -1,4 +1,4 @@
-from tensorflow.keras.datasets import mnist # pylint: disable=import-error
+from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
 import numpy as np
 
 # About keras mnist dataset:
