@@ -6,7 +6,8 @@
 extension-pkg-whitelist=
 
 # Specify a score threshold to be exceeded before program exits with error.
-fail-under=10.0
+fail-under=10
+
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
@@ -579,7 +580,7 @@ max-public-methods=20
 max-returns=6
 
 # Maximum number of statements in function / method body.
-max-statements=0
+max-statements=20
 
 # Minimum number of public methods for a class (see R0903).
 min-public-methods=0

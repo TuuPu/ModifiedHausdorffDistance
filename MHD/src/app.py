@@ -1,4 +1,4 @@
-from dataset.image_processing import *
+from dataset.image_processing import print_training_image
 
 def main():
     print_training_image()
