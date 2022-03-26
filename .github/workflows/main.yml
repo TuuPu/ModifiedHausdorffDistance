@@ -39,3 +39,5 @@ jobs:
         run: poetry run coverage xml
       - name: Coverage report to Codecov
         uses: codecov/codecov-action@v2
+      - name: Lint
+        run: poetry run pylint src --fail-under=8
