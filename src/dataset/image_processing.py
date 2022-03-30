@@ -34,19 +34,19 @@ def sort_images_and_threshold(pictures, labels, test):
 
 #https://en.wikipedia.org/wiki/Erosion_(morphology)
 #Creating edge images to help with the distance calculations.
-def create_binary_edge_image(image_set, se=None):
+def create_binary_edge_image(image_set, s_e=None):
     edge_images = []
     image_set = np.concatenate(image_set, axis=0)
     image_set = np.squeeze(image_set)
     for i in range(image_set.shape[0]):
         img = image_set[i,:,:]
-        if se is None:
-            se = mrph.generate_binary_structure(2, 1)
+        if s_e is None:
+            s_e = mrph.generate_binary_structure(2, 1)
 
         # Sets pictures with elements as booleans according to 0 and 1
-        s = img.astype(np.bool) ^ mrph.binary_erosion(img, se)
+        s_erosion = img.astype(np.bool) ^ mrph.binary_erosion(img, s_e)
         # appends pictures to list and flips boolean types to ints.
-        edge_images.append(s.astype(int))
+        edge_images.append(s_erosion.astype(int))
     return np.array(edge_images)
 
 #Returns a 2D array in shape of (75, 2) for example.
