@@ -1,5 +1,5 @@
-from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
 import numpy as np
+import scipy.ndimage.morphology as mrph
 
 # About keras mnist dataset:
 # A dataset of 60 000 greyscale training images 28x28 pixels each.
@@ -7,7 +7,7 @@ import numpy as np
 
 # data split to training and testing
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+#(x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 # By using label values, select 10k training images
 # and make a list where train_pictures[0] holds 1000 images
@@ -32,6 +32,28 @@ def sort_images_and_threshold(pictures, labels, test):
         thresholded_images.append(tmp_figures)
     return thresholded_images
 
+#https://en.wikipedia.org/wiki/Erosion_(morphology)
+#Creating edge images to help with the distance calculations.
+def create_binary_edge_image(image_set, se=None):
+    edge_images = []
+    image_set = np.concatenate(image_set, axis=0)
+    image_set = np.squeeze(image_set)
+    for i in range(image_set.shape[0]):
+        img = image_set[i,:,:]
+        if se is None:
+            se = mrph.generate_binary_structure(2, 1)
+
+        # Sets pictures with elements as booleans according to 0 and 1
+        s = img.astype(np.bool) ^ mrph.binary_erosion(img, se)
+        # appends pictures to list and flips boolean types to ints.
+        edge_images.append(s.astype(int))
+    return np.array(edge_images)
+
+#Returns a 2D array in shape of (75, 2) for example.
+def coordinates(image):
+    image_coordinates = np.array(np.where(image)).T
+    return image_coordinates
+
 
 
 # Prints a binary image of the number 0.
@@ -41,14 +63,10 @@ def sort_images_and_threshold(pictures, labels, test):
 # for testing set too. It is not meant to be labeled
 # to the use of getting the answer. Testing will be done
 # in a correct way, using k-nearest and MHD, as discussed.
-def print_training_image():
-    train_pictures = sort_images_and_threshold(x_train, y_train, True)
-    test_pictures = sort_images_and_threshold(x_test, y_test, False)
-    image, index = input("Enter a number you want to view (0 to 9  range) "
-                         "and index number between 0 and 999: ").split()
-    print('A picture of value ', image,
-          ' printed below in binary form' + "\n" + str(train_pictures[int(image)][int(index)]))
-    print(test_pictures[0][0])
+def print_training_image(image_set):
+    print(image_set.shape)
+    print(image_set[0])
+    print(coordinates(image_set[0]).shape)
 
 # Additional comments:
 # Apparently keras is a bit of a heavy library and even without
