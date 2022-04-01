@@ -2,6 +2,9 @@ from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
 from dataset import image_processing
 from distance import mhd
 
+# NOTE: Importing the mnist database takes about 7-10 seconds
+# the program itself runs in about 1.5 seconds.
+
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 def main():
@@ -19,11 +22,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-'''
-Did some testing with imports.
-Importing mnist takes somewhere around 7 to 10 seconds
-and the actual execution
-of the program took about 1.6 seconds.
-'''

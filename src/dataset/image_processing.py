@@ -1,11 +1,6 @@
 import numpy as np
 import scipy.ndimage.morphology as mrph
 
-''' 
-About keras mnist dataset:
-A dataset of 60 000 greyscale training images 28x28 pixels each.
-10 000 images used for testing.
-'''
 # data split to training and testing
 
 #(x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -80,12 +75,3 @@ def print_training_image(image_set):
     print(image_set.shape)
     print(image_set[0])
     print(coordinates(image_set[0]).shape)
-
-''' 
-Additional comments:
- Apparently keras is a bit of a heavy library and even without
- a simple for loop, it takes a few seconds to run this
- module. I noticed it from the beginning when I tried to
- just print the shapes of the datasets before writing the for
- loop. So the for loop isn't the time consuming part here, it is keras.
- '''
