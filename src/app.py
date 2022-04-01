@@ -13,9 +13,7 @@ def main():
     print(edge_training_set.shape)
     print(edge_testing_set.shape)
     print(image_processing.coordinates(edge_testing_set[0]).shape)
-    d1 = mhd.mhd_d22(edge_testing_set[0], edge_training_set[0])
-    print(d1)
-    #print(mhd.mhd_d22(edge_testing_set[0], edge_training_set[4532]))
+    print(mhd.mhd_d22(edge_testing_set[0], edge_training_set[4532]))
     #print(edge_testing_set[0])
     #print(edge_training_set[4532])
 
