@@ -24,4 +24,6 @@ Tuesday: 8 hours (10-18)
 
 Wednesday: 5 hours (10-15)
 
-Friday: Around 4-5 hours (10-14) Still haven't done all the stuff needed for today.
+Friday: 5 hours (10-15)
+
+Total: 18 hours
