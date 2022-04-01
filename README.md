@@ -15,6 +15,8 @@
 
 [Week 2 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_2.md)
 
+[Week 3 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_3.md)
+
 ### Get the project running
 
 `poetry install`

@@ -21,7 +21,9 @@ if __name__ == "__main__":
     main()
 
 
-#Did some testing with imports.
-# Importing mnist takes somewhere around 7 to 10 seconds
-# and the actual execution
-# of the program took about 1.6 seconds.
+'''
+Did some testing with imports.
+Importing mnist takes somewhere around 7 to 10 seconds
+and the actual execution
+of the program took about 1.6 seconds.
+'''
