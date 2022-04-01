@@ -9,6 +9,8 @@
 
 [Requirement documentation](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/requirement_spec.md)
 
+[Testing documentation](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/testing_document.md)
+
 ### Weekly reports
 
 [Week 1 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_1.md)
