@@ -60,6 +60,18 @@ class TestMnist(unittest.TestCase):
         test_images = image_processing.sort_images_and_threshold(x_test, y_test, False)
         self.assertEqual(len(test_images[0]), 980)
 
+    def test_edge_images(self):
+        (x_train, y_train), (x_test, y_test) = mnist.load_data()
+        train_images = image_processing.sort_images_and_threshold(x_test, y_test, True)
+        edge_set = image_processing.create_binary_edge_image(train_images)
+        self.assertEqual(edge_set.shape, (9786, 28, 28))
+
+    def test_coordinates(self):
+        (x_train, y_train), (x_test, y_test) =  mnist.load_data()
+        train_images = image_processing.sort_images_and_threshold(x_test, y_test, True)
+        edge_set = image_processing.create_binary_edge_image(train_images)
+        coordinates_shape = image_processing.coordinates(edge_set[0]).shape
+        self.assertEqual(coordinates_shape, (75, 2))
 # Print parts of the image_processing.py module are not tested because they work when you run the program. Also it
 # is not a feature which will stay in the program. It is only meant to be in the first release to show the progress
 # done. Tests can be for prints if wanted, though.

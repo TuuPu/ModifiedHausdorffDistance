@@ -9,10 +9,13 @@ def main():
     testing_images = image_processing.sort_images_and_threshold(x_test, y_test, False)
     edge_training_set = image_processing.create_binary_edge_image(training_images)
     edge_testing_set = image_processing.create_binary_edge_image(testing_images)
-    image_processing.print_training_image(edge_testing_set)
-    print(mhd.mhd_d22(edge_testing_set[0], edge_training_set[4532]))
-    print(edge_testing_set[0])
-    print(edge_training_set[4532])
+    #image_processing.print_training_image(edge_testing_set)
+    print(edge_training_set.shape)
+    print(edge_testing_set.shape)
+    print(image_processing.coordinates(edge_testing_set[0]).shape)
+    #print(mhd.mhd_d22(edge_testing_set[0], edge_training_set[4532]))
+    #print(edge_testing_set[0])
+    #print(edge_training_set[4532])
 
 if __name__ == "__main__":
     main()

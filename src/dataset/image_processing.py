@@ -44,7 +44,7 @@ def create_binary_edge_image(image_set, s_e=None):
             s_e = mrph.generate_binary_structure(2, 1)
 
         # Sets pictures with elements as booleans according to 0 and 1
-        s_erosion = img.astype(np.bool) ^ mrph.binary_erosion(img, s_e)
+        s_erosion = img.astype(bool) ^ mrph.binary_erosion(img, s_e)
         # appends pictures to list and flips boolean types to ints.
         edge_images.append(s_erosion.astype(int))
     return np.array(edge_images)
