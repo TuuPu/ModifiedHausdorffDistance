@@ -1,10 +1,9 @@
-from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
-from dataset import image_processing
-from distance import mhd
 from collections import Counter
 import time
 import random
-import numpy as np
+from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
+from dataset import image_processing
+from distance import mhd
 # NOTE: Importing the mnist database takes about 7-10 seconds
 # the program itself runs in about 1.5 seconds.
 
@@ -20,7 +19,9 @@ def get_labels(indexes):
     labels = []
     for i in indexes:
         labels.append(int(i/1000))
-    return labels
+    label = Counter(labels)
+    label = label.most_common(1)[0][0]
+    return labels, label
 
 def main():
     '''
@@ -41,8 +42,10 @@ def main():
     value of k is sensible.
     '''
 
-    testing_images, selected_test_labels = image_processing.sort_images_and_threshold(x_test, y_test)
-    training_images, selected_train_labels = image_processing.sort_images_and_threshold(x_train, y_train)
+    testing_images, selected_test_labels = \
+        image_processing.sort_images_and_threshold(x_test, y_test)
+    training_images, selected_train_labels = \
+        image_processing.sort_images_and_threshold(x_train, y_train)
     edge_training_set = image_processing.create_binary_edge_image(training_images)
     edge_testing_set = image_processing.create_binary_edge_image(testing_images)
 
@@ -51,18 +54,17 @@ def main():
     start = time.time()
     distance_list = calculate_distances_for_set(edge_testing_set[random_value], edge_training_set)
     sorted_distances, indexes = mhd.k_nearest(3, distance_list)
-    labels = get_labels(indexes)
-    label = Counter(labels)
-    label = label.most_common(1)[0][0]
+    labels, most_common_label = get_labels(indexes)
     stop = time.time()
     print("time", stop-start)
     print(edge_testing_set[random_value])
     print(testing_images[random_value])
     print("actual label", selected_test_labels[random_value])
+    print("Training label", selected_train_labels[random_value])
     print("value of random int", random_value)
     print("labels suggested", labels)
-    print("label suggested", label)
+    print("label suggested", most_common_label)
+    print("sorted distances with indexes", sorted_distances)
 
 if __name__ == "__main__":
     main()
-

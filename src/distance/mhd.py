@@ -1,7 +1,7 @@
+from operator import itemgetter
 from scipy.spatial import cKDTree
 from dataset import image_processing
-from operator import itemgetter
-import time
+
 
 
 
@@ -24,14 +24,14 @@ def calculate_minimum_distance_pairwise(test_image, training_image):
     distance_2 = tree2.query(coordinates_test_img)[0]
     return distance_1, distance_2
 
-def mhd_D23(test_image, training_image):
+def mhd_d23(test_image, training_image):
     distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
     distance_1 = distance_1.mean()
     distance_2 = distance_2.mean()
     function_3 = (distance_1 + distance_2)/2
     return function_3
 
-def mhd_D23_without_mean(test_image, training_image):
+def mhd_d23_without_mean(test_image, training_image):
     distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
     distance_1 = distance_1.sum()
     distance_2 = distance_2.sum()
@@ -70,5 +70,11 @@ def k_nearest(k, distance_list):
 
 
 
-# Tuesday 9.30 - 17 working on different calculations and reading about k-nearest
-# Wednesday 10 - 19 Getting k-nearest to work. And wondering why test set does not return 10k pictures.
+# Tuesday 9.30 - 17 working on different
+# calculations and reading about k-nearest
+
+# Wednesday 10 - 19 Getting k-nearest to work.
+# And wondering why test set does not return 10k pictures.
+
+# Thursday 10 - ... Testing, pylint and
+# modifying image-arrays to find indexes for correct labels

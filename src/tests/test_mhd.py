@@ -53,7 +53,7 @@ class TestMhd(unittest.TestCase):
         distance_2 = distance_2.mean()
         function_3 = (distance_1 + distance_2) / 2
 
-        d1 = mhd.mhd_D23(self.edge_testing[0], self.edge_training[0])
+        d1 = mhd.mhd_d23(self.edge_testing[0], self.edge_training[0])
         self.assertEqual(d1, function_3)
 
     def  test_mhd23_without_mean(self):
@@ -66,7 +66,7 @@ class TestMhd(unittest.TestCase):
         distance_1 = distance_1.sum()
         distance_2 = distance_2.sum()
         function_3 = (distance_1 + distance_2) / 2
-        d1 = mhd.mhd_D23_without_mean(self.edge_testing[0], self.edge_training[0])
+        d1 = mhd.mhd_d23_without_mean(self.edge_testing[0], self.edge_training[0])
         self.assertEqual(d1, function_3)
 
     def test_k_nearest(self):
