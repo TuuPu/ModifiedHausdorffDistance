@@ -51,7 +51,6 @@ def mhd_d22(test_image, training_image):
     distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
     distance_1 = distance_1.mean()
     distance_2 = distance_2.mean()
-    stop = time.time()
     return max(distance_1, distance_2)
 
 def k_nearest(k, distance_list):

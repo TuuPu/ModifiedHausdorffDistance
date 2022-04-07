@@ -8,8 +8,8 @@ class TestMhd(unittest.TestCase):
 
     def setUp(self):
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
-        self.training_images = image_processing.sort_images_and_threshold(x_train, y_train, True)
-        self.test_images = image_processing.sort_images_and_threshold(x_test, y_test, False)
+        self.training_images, selected_training_labels = image_processing.sort_images_and_threshold(x_train, y_train)
+        self.test_images, selected_testing_labels = image_processing.sort_images_and_threshold(x_test, y_test)
         self.edge_training = image_processing.create_binary_edge_image(self.training_images)
         self.edge_testing = image_processing.create_binary_edge_image(self.test_images)
 
@@ -41,3 +41,38 @@ class TestMhd(unittest.TestCase):
 
         d1 = mhd.mhd_d22(self.edge_testing[0], self.edge_training[0])
         self.assertEqual(d1, max_length)
+
+    def test_mhd23(self):
+        coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
+        coordinates_training_img = image_processing.coordinates(self.edge_training[0])
+        tree1 = cKDTree(coordinates_test_img)
+        tree2 = cKDTree(coordinates_training_img)
+        distance_1 = tree1.query(coordinates_training_img)[0]
+        distance_2 = tree2.query(coordinates_test_img)[0]
+        distance_1 = distance_1.mean()
+        distance_2 = distance_2.mean()
+        function_3 = (distance_1 + distance_2) / 2
+
+        d1 = mhd.mhd_D23(self.edge_testing[0], self.edge_training[0])
+        self.assertEqual(d1, function_3)
+
+    def  test_mhd23_without_mean(self):
+        coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
+        coordinates_training_img = image_processing.coordinates(self.edge_training[0])
+        tree1 = cKDTree(coordinates_test_img)
+        tree2 = cKDTree(coordinates_training_img)
+        distance_1 = tree1.query(coordinates_training_img)[0]
+        distance_2 = tree2.query(coordinates_test_img)[0]
+        distance_1 = distance_1.sum()
+        distance_2 = distance_2.sum()
+        function_3 = (distance_1 + distance_2) / 2
+        d1 = mhd.mhd_D23_without_mean(self.edge_testing[0], self.edge_training[0])
+        self.assertEqual(d1, function_3)
+
+    def test_k_nearest(self):
+
+        distance_list = []
+        for i, image in enumerate(self.edge_training):
+            distance_list.append([i, mhd.mhd_d22(self.edge_testing[0], image)])
+        three_distances, indexes = mhd.k_nearest(3, distance_list)
+        self.assertEqual(three_distances, [[218, 0.5774284771915368], [625, 0.5774284771915368], [951, 0.5898000448436316]])

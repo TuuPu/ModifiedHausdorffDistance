@@ -50,7 +50,7 @@ def main():
 
     start = time.time()
     distance_list = calculate_distances_for_set(edge_testing_set[random_value], edge_training_set)
-    sorted_distances, indexes = mhd.k_nearest(5, distance_list)
+    sorted_distances, indexes = mhd.k_nearest(3, distance_list)
     labels = get_labels(indexes)
     label = Counter(labels)
     label = label.most_common(1)[0][0]
