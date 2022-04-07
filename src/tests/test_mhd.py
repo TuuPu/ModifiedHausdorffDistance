@@ -25,6 +25,8 @@ class TestMhd(unittest.TestCase):
         self.assertTrue((d1 == distance_1).all())
         self.assertTrue((d2 == distance_2).all())
 
+
+
     def test_mhd22(self):
         coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
         coordinates_training_img = image_processing.coordinates(self.edge_training[0])

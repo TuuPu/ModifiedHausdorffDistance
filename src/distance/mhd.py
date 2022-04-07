@@ -1,6 +1,7 @@
 from scipy.spatial import cKDTree
 from dataset import image_processing
-
+from operator import itemgetter
+import time
 
 
 
@@ -23,6 +24,20 @@ def calculate_minimum_distance_pairwise(test_image, training_image):
     distance_2 = tree2.query(coordinates_test_img)[0]
     return distance_1, distance_2
 
+def mhd_D23(test_image, training_image):
+    distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
+    distance_1 = distance_1.mean()
+    distance_2 = distance_2.mean()
+    function_3 = (distance_1 + distance_2)/2
+    return function_3
+
+def mhd_D23_without_mean(test_image, training_image):
+    distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
+    distance_1 = distance_1.sum()
+    distance_2 = distance_2.sum()
+    function_3 = (distance_1 + distance_2)/2
+    return function_3
+
 
 def mhd_d22(test_image, training_image):
     '''
@@ -36,27 +51,25 @@ def mhd_d22(test_image, training_image):
     distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
     distance_1 = distance_1.mean()
     distance_2 = distance_2.mean()
+    stop = time.time()
     return max(distance_1, distance_2)
 
+def k_nearest(k, distance_list):
+    '''
+    Sorts array in ascending order and
+    chooses k first elements. Also
+    fetches indexes of the images chosen.
+    '''
+    sorted_list = sorted(distance_list, key = itemgetter(1))
+    sorted_list = sorted_list[:k]
+    indexes = [i[0] for i in sorted_list]
+    return sorted_list, indexes
 
 
 
 
 
 
-#Tuesday: 10-18 Trying to figure out how to calculate MHD,
-# failed miserably at first by trying to apply the calculation
-#from a picture over a picture set,
-# before realising it is the wrong way and now trying to figure out
-# how to calculate the
-#the distances over coordinates of pixels. Hope this is right.
 
-#Wednesday 10 - 15 Built a function to get edge
-# images for easier distance calculations.
-# Once I got that done and made
-# sure it works, I started building the actual calculations for the distances.
-# Distance calculation for D22 are now complete and should work.
-# Will keep working on unittests later on today or possibly tomorrow.
-# This was an intensive couple of hours.
-
-#Friday 10-... Worked on tests, pylint and documentation
+# Tuesday 9.30 - 17 working on different calculations and reading about k-nearest
+# Wednesday 10 - 19 Getting k-nearest to work. And wondering why test set does not return 10k pictures.

@@ -6,7 +6,7 @@ import scipy.ndimage.morphology as mrph
 #(x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 
-def sort_images_and_threshold(pictures, labels, test):
+def sort_images_and_threshold(pictures, labels):
     '''
     Selects 10k  images and sorts them to a list
     using labels. If you call thresholded_images[0], you get
@@ -19,16 +19,17 @@ def sort_images_and_threshold(pictures, labels, test):
     is 1 (black).
     '''
     thresholded_images = []
+    selected_labels = []
     for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
         idxs = np.argwhere(labels == i)
-        if test:
-            idxs = idxs[:1000]
-        else:
-            idxs = idxs[:10000]
+        idxs = idxs[:1000]
         tmp_figures = pictures[idxs, :, :]
         tmp_figures = np.where(tmp_figures <= 100, 0, 1)
         thresholded_images.append(tmp_figures)
-    return thresholded_images
+        selected_labels = selected_labels + labels[idxs].tolist()
+    thresholded_images = np.concatenate(thresholded_images, axis=0)
+    thresholded_images = np.squeeze(thresholded_images)
+    return thresholded_images, selected_labels
 
 def create_binary_edge_image(image_set, s_e=None):
     '''
@@ -41,8 +42,6 @@ def create_binary_edge_image(image_set, s_e=None):
     Returns a binary image with only outer lines left.
     '''
     edge_images = []
-    image_set = np.concatenate(image_set, axis=0)
-    image_set = np.squeeze(image_set)
     for i in range(image_set.shape[0]):
         img = image_set[i,:,:]
         if s_e is None:
