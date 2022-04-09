@@ -1,9 +1,12 @@
 from collections import Counter
+import statistics
 import time
 import random
 from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
 from dataset import image_processing
 from distance import mhd
+from performance import performance_tests
+import numpy as np
 # NOTE: Importing the mnist database takes about 7-10 seconds
 # the program itself runs in about 1.5 seconds.
 
@@ -12,7 +15,7 @@ from distance import mhd
 def calculate_distances_for_set(test_image, training_image_set):
     distance_list = []
     for i, image in enumerate(training_image_set):
-        distance_list.append([i, mhd.mhd_d22(test_image, image)])
+        distance_list.append([mhd.mhd_d22(test_image, image), i])
     return distance_list
 
 def get_labels(indexes):
@@ -25,21 +28,27 @@ def get_labels(indexes):
 
 def main():
     '''
-    Runs the program.
+    Runs the program and stress tests.
+    Stress tests include:
 
-    On wednesday 6.4, I tried implementing a heap for quicker
-    sorting of min-distances according to the value k.
-    To my surprise using a heap was slower. The differences
-    were between a half a second and a second. I used the
-    heapq to return nsmallest(k, distance_list).
-    I tried both ways, appending a list and then
-    returning heapq.nsmallest(k, distance_list) and
-    iterating through the training set and only pushing
-    into the heap when a smaller distance was found after
-    k:th iteration of the loop. The only times when the heap
-    was actually faster were when k>300.
-    Right now the run time is somewhere around 2.5 seconds, when
-    value of k is sensible.
+    running a loop of n iterations and calculating
+    the mean, max and min of:
+    -calculation time
+    -every sorting style I have used
+
+    Accuracy of predictions using the fastest sort.
+    Accuracy is calculated for k-values:
+    1, 3, 5, 11, 15, 21, 51 and 101.
+
+    Also the program calculates the avg of one
+    pairwise distance calculation.
+
+    WARNING: running the program takes several minutes
+    because the accuracy test runs a loop of 100 iterations
+    and the calculation loops run twice when forming the
+    run time averages.
+    One calculation takes approx 2.5 secs and the calculations
+    run three times, so that's (2.5*100)*3 seconds.
     '''
 
     testing_images, selected_test_labels = \
@@ -48,23 +57,98 @@ def main():
         image_processing.sort_images_and_threshold(x_train, y_train)
     edge_training_set = image_processing.create_binary_edge_image(training_images)
     edge_testing_set = image_processing.create_binary_edge_image(testing_images)
-
     random_value = random.randint(0, 9786)
+    edge_testing_image = edge_testing_set[random_value]
+    distance_list = calculate_distances_for_set(edge_testing_image, edge_training_set)
 
-    start = time.time()
+    mean_calc, avg_for_one, max_calc, min_calc = performance_tests.time_with_mhd22_calculations\
+        (edge_testing_image, edge_training_set, 100)
+    print("Calculation time when n=100")
+    print("Mean: ", mean_calc)
+    print("Max: ", max_calc)
+    print("Min: ", min_calc)
+    print("Avg for one pair: ", avg_for_one)
+    mean_py, max_py, min_py = performance_tests.time_with_pythons_sort(distance_list, 100, 5)
+    print("Sorting with python's sorted command n=100, k=5")
+    print("Mean: ", mean_py)
+    print("Max: ", max_py)
+    print("Min: ", min_py)
+    heap_mean, heap_max, heap_min = performance_tests.time_with_heap_search(distance_list, 100, 5)
+    print("Sorting with heapq.nsmallest function straight from a list n=100, k=5")
+    print("Mean: ", heap_mean)
+    print("Max: ", heap_max)
+    print("Min: ", heap_min)
+    comp_mean, comp_max, comp_min = performance_tests.time_with_complete_heap_sort\
+        (edge_testing_image, edge_training_set, 100, 5)
+    print("Sorting AND calculating distances with heap n=100, k=5")
+    print("Mean: ", comp_mean)
+    print("Max: ", comp_max)
+    print("Min: ", comp_min)
+    heapify_mean, heapify_max, heapify_min = performance_tests.time_with_using_heapify\
+        (distance_list, 100, 5)
+    print("Changing a list to a heap type structure using heapify and then returning values n=100, k=5")
+    print("Mean: ", heapify_mean)
+    print("Max: ", heapify_max)
+    print("Min: ", heapify_min)
+
+
+
+
+    num_test_images = 100
+    k_values = [1, 3, 5, 11, 15, 21, 51, 101]
+    hits_table = np.zeros((num_test_images, len(k_values)))
+    for i in range(100):
+        rand_val = random.randint(0, 9786)
+        distance_list = calculate_distances_for_set(edge_testing_set[rand_val], edge_training_set)
+        for k_ind, k in enumerate(k_values):
+            sorted_distances, indexes = mhd.k_nearest_with_heap_search(k, distance_list)
+            labels, most_common_label = get_labels(indexes)
+            hits_table[i, k_ind] = int(most_common_label == selected_test_labels[rand_val][0])
+    percentages = np.mean(hits_table, axis=0)
+    for idx, i in enumerate(percentages):
+        print("k-", k_values[idx], ", accuracy%: ", i)
+
+    '''
+    math_time_start = time.time()
     distance_list = calculate_distances_for_set(edge_testing_set[random_value], edge_training_set)
-    sorted_distances, indexes = mhd.k_nearest(3, distance_list)
+    math_time_stop = time.time()
+    sort_time_start = time.time()
+    sorted_distances, indexes = mhd.k_nearest(5, distance_list)
+    sort_time_stop = time.time()
+    
+    sort_time_heap_search_start = time.time()
+    sorted_distances_heap_search, indexes = mhd.k_nearest_with_heap_search(5, distance_list)
+    sort_time_heap_search_stop = time.time()
+    
+    sort_time_with_complete_heap_start = time.time()
+    sorted_distances_complete_heap = mhd.k_nearest_with_complete_heap(5, edge_testing_set[random_value], edge_training_set)
+    sort_time_with_complete_heap_stop = time.time()
+    
+    sort_time_with_heapify_start = time.time()
+    sorted_heapify = mhd.k_nearest_with_heapify(5, distance_list)
+    sort_time_with_heapify_stop = time.time()
+    
     labels, most_common_label = get_labels(indexes)
-    stop = time.time()
-    print("time", stop-start)
-    print(edge_testing_set[random_value])
-    print(testing_images[random_value])
+    #stop = time.time()
+
+    #print("time for complete calculation", math_time_stop-math_time_start)
+    #print("time for sort without heap", sort_time_stop-sort_time_start)
+    #print("time for sort with heap search", sort_time_heap_search_stop-sort_time_heap_search_start)
+    #print("time for sort with complete heap", sort_time_with_complete_heap_stop-sort_time_with_complete_heap_start)
+    #print("time with heapify", sort_time_with_heapify_stop-sort_time_with_heapify_start)
+    #print("average time per calculation", (math_time_stop-math_time_start)/10000)
+
+    #print("sorted heapify", sorted_heapify)
+    #print(edge_testing_set[random_value])
+    #print(testing_images[random_value])
     print("actual label", selected_test_labels[random_value])
-    print("Training label", selected_train_labels[random_value])
-    print("value of random int", random_value)
-    print("labels suggested", labels)
+    #print("Training label", selected_train_labels[random_value])
+    #print("value of random int", random_value)
+    #print("labels suggested", labels)
     print("label suggested", most_common_label)
     print("sorted distances with indexes", sorted_distances)
-
+    print("sorted distances with heap search", sorted_distances_heap_search, indexes)
+    #print("sorted distances with complete heap", sorted_distances_complete_heap)
+    '''
 if __name__ == "__main__":
     main()

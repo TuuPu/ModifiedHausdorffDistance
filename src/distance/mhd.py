@@ -1,6 +1,8 @@
 from operator import itemgetter
+import heapq
 from scipy.spatial import cKDTree
 from dataset import image_processing
+
 
 
 
@@ -59,11 +61,36 @@ def k_nearest(k, distance_list):
     chooses k first elements. Also
     fetches indexes of the images chosen.
     '''
-    sorted_list = sorted(distance_list, key = itemgetter(1))
+    sorted_list = sorted(distance_list, key = itemgetter(0))
     sorted_list = sorted_list[:k]
-    indexes = [i[0] for i in sorted_list]
+    indexes = [i[1] for i in sorted_list]
     return sorted_list, indexes
 
+def k_nearest_with_heap_search(k, distance_list):
+    '''Only using heap search'''
+    list_of_distances = heapq.nsmallest(k, distance_list)
+    indexes = [i[1] for i in list_of_distances]
+    return list_of_distances, indexes
+
+def k_nearest_with_complete_heap(k, test_image, training_set):
+    '''Uses heap insert and sort
+    and tries to limit the amount
+    of elements in heap
+    '''
+    distance_list = []
+    for idx, image in enumerate(training_set):
+        distance = mhd_d22(test_image, image)
+        if idx == 0:
+            heapq.heappush(distance_list, distance)
+        else:
+            if distance < heapq.nsmallest(k, distance_list)[-1]:
+                heapq.heappush(distance_list, distance)
+    return heapq.nsmallest(k, distance_list)
+
+def k_nearest_with_heapify(k, distance_list):
+    heapq.heapify(distance_list)
+    sorted_distances = heapq.nsmallest(k, distance_list)
+    return sorted_distances
 
 
 
@@ -76,5 +103,5 @@ def k_nearest(k, distance_list):
 # Wednesday 10 - 19 Getting k-nearest to work.
 # And wondering why test set does not return 10k pictures.
 
-# Thursday 10 - ... Testing, pylint and
+# Thursday 10 - 17 Testing, pylint and
 # modifying image-arrays to find indexes for correct labels
