@@ -70,9 +70,13 @@ class TestMhd(unittest.TestCase):
         self.assertEqual(d1, function_3)
 
     def test_k_nearest(self):
-
         distance_list = []
         for i, image in enumerate(self.edge_training):
-            distance_list.append([i, mhd.mhd_d22(self.edge_testing[0], image)])
+            distance_list.append([mhd.mhd_d22(self.edge_testing[0], image), i])
         three_distances, indexes = mhd.k_nearest(3, distance_list)
-        self.assertEqual(three_distances, [[218, 0.5774284771915368], [625, 0.5774284771915368], [951, 0.5898000448436316]])
+        self.assertEqual(three_distances, [[0.5774284771915368, 218], [0.5774284771915368, 625], [0.5898000448436316, 951]])
+
+    def test_k_nearest_with_heap_search(self):
+        test_list = [[3, 2], [4, 7], [5, 10], [2, 8], [1, 9]]
+        sorted_list, indexes = mhd.k_nearest_with_heap_search(5, test_list)
+        self.assertEqual(sorted_list, [[1, 9], [2, 8], [3, 2], [4, 7], [5, 10]])
