@@ -7,6 +7,8 @@
 
 ## Documentation
 
+[Implementation document](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/implementation_document.md)
+
 [Requirement documentation](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/requirement_spec.md)
 
 [Testing documentation](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/testing_document.md)
@@ -18,6 +20,8 @@
 [Week 2 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_2.md)
 
 [Week 3 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_3.md)
+
+[Week 4 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_4.md)
 
 ### Get the project running
 
