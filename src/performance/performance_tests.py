@@ -9,9 +9,9 @@ def calculate_distances_for_set(test_image, training_image_set):
     return distance_list
 
 
-def time_with_mhd22_calculations(test_image, training_set, n):
+def time_with_mhd22_calculations(test_image, training_set, iterations):
     math_time_list = []
-    for i in range(n):
+    for iteration in range(iterations):
         math_time_start = time.time()
         calculate_distances_for_set(test_image, training_set)
         math_time_stop = time.time()
@@ -22,9 +22,9 @@ def time_with_mhd22_calculations(test_image, training_set, n):
     min_math_time = min(math_time_list)
     return mean_math_time, avg_time_per_calc, max_math_time, min_math_time
 
-def time_with_pythons_sort(distance_list, n, k):
+def time_with_pythons_sort(distance_list, iterations, k):
     sort_list_python = []
-    for i in range(n):
+    for iteration in range(iterations):
         sort_time_start = time.time()
         mhd.k_nearest(k, distance_list)
         sort_time_stop = time.time()
@@ -34,9 +34,9 @@ def time_with_pythons_sort(distance_list, n, k):
     min_sort_time_python = min(sort_list_python)
     return mean_sort_time_python, max_sort_time_python, min_sort_time_python
 
-def time_with_heap_search(distance_list, n, k):
+def time_with_heap_search(distance_list, iterations, k):
     sort_list_heap_sort = []
-    for i in range(n):
+    for iteration in range(iterations):
         sort_time_start = time.time()
         mhd.k_nearest_with_heap_search(k, distance_list)
         sort_time_stop = time.time()
@@ -46,9 +46,9 @@ def time_with_heap_search(distance_list, n, k):
     min_sort_time = min(sort_list_heap_sort)
     return mean_sort_time, max_sort_time, min_sort_time
 
-def time_with_complete_heap_sort(image, training_set, n, k):
+def time_with_complete_heap_sort(image, training_set, iterations, k):
     sort_list_complete_heap = []
-    for i in range(n):
+    for iteration in range(iterations):
         sort_time_start = time.time()
         mhd.k_nearest_with_complete_heap(k, image, training_set)
         sort_time_stop = time.time()
@@ -58,9 +58,9 @@ def time_with_complete_heap_sort(image, training_set, n, k):
     min_sort_time = min(sort_list_complete_heap)
     return mean_sort_time, max_sort_time, min_sort_time
 
-def time_with_using_heapify(distance_list, n, k):
+def time_with_using_heapify(distance_list, iterations, k):
     sort_list_using_heapify = []
-    for i in range(n):
+    for iteration in range(iterations):
         sort_time_start = time.time()
         mhd.k_nearest_with_heapify(k, distance_list)
         sort_time_stop = time.time()

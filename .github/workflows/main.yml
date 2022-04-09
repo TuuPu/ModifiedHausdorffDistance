@@ -40,4 +40,4 @@ jobs:
       - name: Coverage report to Codecov
         uses: codecov/codecov-action@v2
       - name: Lint
-        run: poetry run pylint src
+        run: poetry run pylint src --fail-under=9

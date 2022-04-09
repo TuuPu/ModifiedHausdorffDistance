@@ -36,5 +36,7 @@ k is the number of distances wanted.
 Information about heapq's time complexities were hard to find, I will read about it more in the upcoming weeks.
 
 [kd-tree](https://en.wikipedia.org/wiki/K-d_tree)
+
 [Python's sort](https://drops.dagstuhl.de/opus/volltexte/2018/9467/pdf/LIPIcs-ESA-2018-4.pdf)
+
 [Heapq nsmallest](https://johnlekberg.com/blog/2020-11-01-stdlib-heapq.html)

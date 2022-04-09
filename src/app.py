@@ -1,10 +1,10 @@
 from collections import Counter
 import random
 from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
+import numpy as np
 from dataset import image_processing
 from distance import mhd
 from performance import performance_tests
-import numpy as np
 # NOTE: Importing the mnist database takes about 7-10 seconds
 # the program itself runs in about 1.5 seconds.
 
@@ -84,13 +84,11 @@ def main():
     print("Min: ", comp_min)
     heapify_mean, heapify_max, heapify_min = performance_tests.time_with_using_heapify\
         (distance_list, 100, 5)
-    print("Changing a list to a heap type structure using heapify and then returning values n=100, k=5")
+    print("Changing a list to a heap type structure using heapify "
+          "and then returning values n=100, k=5")
     print("Mean: ", heapify_mean)
     print("Max: ", heapify_max)
     print("Min: ", heapify_min)
-
-
-
 
     num_test_images = 100
     k_values = [1, 3, 5, 11, 15, 21, 51, 101]
@@ -106,47 +104,5 @@ def main():
     for idx, i in enumerate(percentages):
         print("k-", k_values[idx], ", accuracy%: ", i)
 
-    '''
-    math_time_start = time.time()
-    distance_list = calculate_distances_for_set(edge_testing_set[random_value], edge_training_set)
-    math_time_stop = time.time()
-    sort_time_start = time.time()
-    sorted_distances, indexes = mhd.k_nearest(5, distance_list)
-    sort_time_stop = time.time()
-    
-    sort_time_heap_search_start = time.time()
-    sorted_distances_heap_search, indexes = mhd.k_nearest_with_heap_search(5, distance_list)
-    sort_time_heap_search_stop = time.time()
-    
-    sort_time_with_complete_heap_start = time.time()
-    sorted_distances_complete_heap = mhd.k_nearest_with_complete_heap(5, edge_testing_set[random_value], edge_training_set)
-    sort_time_with_complete_heap_stop = time.time()
-    
-    sort_time_with_heapify_start = time.time()
-    sorted_heapify = mhd.k_nearest_with_heapify(5, distance_list)
-    sort_time_with_heapify_stop = time.time()
-    
-    labels, most_common_label = get_labels(indexes)
-    #stop = time.time()
-
-    #print("time for complete calculation", math_time_stop-math_time_start)
-    #print("time for sort without heap", sort_time_stop-sort_time_start)
-    #print("time for sort with heap search", sort_time_heap_search_stop-sort_time_heap_search_start)
-    #print("time for sort with complete heap", sort_time_with_complete_heap_stop-sort_time_with_complete_heap_start)
-    #print("time with heapify", sort_time_with_heapify_stop-sort_time_with_heapify_start)
-    #print("average time per calculation", (math_time_stop-math_time_start)/10000)
-
-    #print("sorted heapify", sorted_heapify)
-    #print(edge_testing_set[random_value])
-    #print(testing_images[random_value])
-    print("actual label", selected_test_labels[random_value])
-    #print("Training label", selected_train_labels[random_value])
-    #print("value of random int", random_value)
-    #print("labels suggested", labels)
-    print("label suggested", most_common_label)
-    print("sorted distances with indexes", sorted_distances)
-    print("sorted distances with heap search", sorted_distances_heap_search, indexes)
-    #print("sorted distances with complete heap", sorted_distances_complete_heap)
-    '''
 if __name__ == "__main__":
     main()
