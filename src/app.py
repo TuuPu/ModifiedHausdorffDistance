@@ -11,12 +11,21 @@ from performance import performance_tests
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 def calculate_distances_for_set(test_image, training_image_set):
+    '''
+    Calculates distances for a test image against
+    10k training images
+    '''
     distance_list = []
     for i, image in enumerate(training_image_set):
         distance_list.append([mhd.mhd_d22(test_image, image), i])
     return distance_list
 
 def get_labels(indexes):
+    '''
+    Fetches labels and most common label
+    AKA fetches the number that the  k-NN
+    recommends the image to be
+    '''
     labels = []
     for i in indexes:
         labels.append(int(i/1000))
@@ -47,6 +56,19 @@ def main():
     run time averages.
     One calculation takes approx 2.5 secs and the calculations
     run three times, so that's (2.5*100)*3 seconds.
+
+    If you want to test the program with one image, comment everything
+    away between lines 84 and 127 and copy this:
+
+    sorted_distances, indexes = mhd.k_nearest_with_heap_search(5, distance_list)
+    labels, label = get_labels(indexes)
+    print(edge_testing_image) #Image tested
+    print(selected_test_labels[random_value]) #The number the image represents
+    print(label) #The number k-NN suggests the test image to be.
+
+    If you wish, you can change the value 5 in
+    k_nearest_with_heap_search
+    to test different k-values.
     '''
 
     testing_images, selected_test_labels = \

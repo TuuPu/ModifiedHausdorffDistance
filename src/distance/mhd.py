@@ -27,6 +27,12 @@ def calculate_minimum_distance_pairwise(test_image, training_image):
     return distance_1, distance_2
 
 def mhd_d23(test_image, training_image):
+    '''
+    Calculates D23 version of distance.
+    Differs from D22 only by not taking
+    max(d(A, B), d(B, A)) but calculating
+    (d(A, B) + d(B, A))/2
+    '''
     distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
     distance_1 = distance_1.mean()
     distance_2 = distance_2.mean()
@@ -34,6 +40,11 @@ def mhd_d23(test_image, training_image):
     return function_3
 
 def mhd_d23_without_mean(test_image, training_image):
+    '''
+    Exactly like D23 but does not take a mean
+    of the pairwise distances.
+    '''
+
     distance_1, distance_2 = calculate_minimum_distance_pairwise(test_image, training_image)
     distance_1 = distance_1.sum()
     distance_2 = distance_2.sum()
@@ -88,20 +99,9 @@ def k_nearest_with_complete_heap(k, test_image, training_set):
     return heapq.nsmallest(k, distance_list)
 
 def k_nearest_with_heapify(k, distance_list):
+    '''First turns the list data structure
+    to a heap and then fetches
+    the k-smallest distances'''
     heapq.heapify(distance_list)
     sorted_distances = heapq.nsmallest(k, distance_list)
     return sorted_distances
-
-
-
-
-
-
-# Tuesday 9.30 - 17 working on different
-# calculations and reading about k-nearest
-
-# Wednesday 10 - 19 Getting k-nearest to work.
-# And wondering why test set does not return 10k pictures.
-
-# Thursday 10 - 17 Testing, pylint and
-# modifying image-arrays to find indexes for correct labels

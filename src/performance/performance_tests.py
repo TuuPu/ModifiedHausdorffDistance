@@ -3,6 +3,8 @@ import time
 from distance import mhd
 
 def calculate_distances_for_set(test_image, training_image_set):
+    '''Calculates distances for a test image against 10k
+    training images'''
     distance_list = []
     for i, image in enumerate(training_image_set):
         distance_list.append([mhd.mhd_d22(test_image, image), i])
@@ -10,6 +12,7 @@ def calculate_distances_for_set(test_image, training_image_set):
 
 
 def time_with_mhd22_calculations(test_image, training_set, iterations):
+    '''Tracks time for calculations'''
     math_time_list = []
     for iteration in range(iterations):
         math_time_start = time.time()
@@ -23,6 +26,7 @@ def time_with_mhd22_calculations(test_image, training_set, iterations):
     return mean_math_time, avg_time_per_calc, max_math_time, min_math_time
 
 def time_with_pythons_sort(distance_list, iterations, k):
+    '''Tracks time for sorting with sorted()'''
     sort_list_python = []
     for iteration in range(iterations):
         sort_time_start = time.time()
@@ -35,6 +39,7 @@ def time_with_pythons_sort(distance_list, iterations, k):
     return mean_sort_time_python, max_sort_time_python, min_sort_time_python
 
 def time_with_heap_search(distance_list, iterations, k):
+    '''Tracks time for sorting with heapq.nsmallest'''
     sort_list_heap_sort = []
     for iteration in range(iterations):
         sort_time_start = time.time()
@@ -47,6 +52,9 @@ def time_with_heap_search(distance_list, iterations, k):
     return mean_sort_time, max_sort_time, min_sort_time
 
 def time_with_complete_heap_sort(image, training_set, iterations, k):
+    '''Tracks time for sorting and calculating distances
+    with complete heap-structure
+    '''
     sort_list_complete_heap = []
     for iteration in range(iterations):
         sort_time_start = time.time()
@@ -59,6 +67,8 @@ def time_with_complete_heap_sort(image, training_set, iterations, k):
     return mean_sort_time, max_sort_time, min_sort_time
 
 def time_with_using_heapify(distance_list, iterations, k):
+    '''Tracks time for modifying the list into a
+    heap and then fetching k-smallest distances'''
     sort_list_using_heapify = []
     for iteration in range(iterations):
         sort_time_start = time.time()

@@ -41,7 +41,7 @@ Coverage report can be found from:
 
 Here's a picture of the coverage so far:
 
-![alt text](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/images/CoverageReportCodeCov.png)
+![alt text](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/images/updatedCodeCov.png)
 
 ## Unittests
 
