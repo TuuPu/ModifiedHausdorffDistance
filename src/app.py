@@ -1,6 +1,4 @@
 from collections import Counter
-import statistics
-import time
 import random
 from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
 from dataset import image_processing

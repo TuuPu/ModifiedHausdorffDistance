@@ -62,15 +62,3 @@ def coordinates(image):
     '''
     image_coordinates = np.array(np.where(image)).T
     return image_coordinates
-
-
-
-def print_training_image(image_set):
-    '''
-    This function is purely here for testing that everything works
-    as supposed to. It will be removed in the end, once the project
-    is finished.
-    '''
-    print(image_set.shape)
-    print(image_set[0])
-    print(coordinates(image_set[0]).shape)

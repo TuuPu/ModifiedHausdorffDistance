@@ -8,13 +8,13 @@ As of now, performance tests have been generally tested with 100 iterations on d
 - 100 iterations of sorting AND calculating distances with heapq heap.
 - 100 iterations of using heapq's heapify and calling for k-shortest distances.
 
-|n=100, k=5     |Mean |Max  |Min  |
-|---------------|-----|-----|-----|
-|Calc. distance |2.66s|5.59s|2.38s|
-|Python sort    |3,4ms|5,8ms|3,3ms|
-|heapq.nsmallest|0.6ms|1,1ms|0,6ms|
-|complete heap  |2.53s|2.77s|2.49s|
-|heapify        |1.8ms|5.1ms|1.7ms|
+|n=100, k=5     |Mean |Max  |Min  |Avg for pairwise calc.  |
+|---------------|-----|-----|-----|------------------------|
+|Calc. distance |2.66s|5.59s|2.38s|0.25ms                  |
+|Python sort    |3,4ms|5,8ms|3,3ms|NaN                     |
+|heapq.nsmallest|0.6ms|1,1ms|0,6ms|NaN                     |
+|complete heap  |2.53s|2.77s|2.49s|NaN                     |
+|heapify        |1.8ms|5.1ms|1.7ms|NaN                     |
 
 I was surprised about the results (this particular test was done on saturday (9.4)), because usually the avg. for calculating a distance has been lower than using the heap, which calculates and sorts distances. I will do more tests and see what comes up next time. I was particulary surprised about the max. time of distance calculations.
 
