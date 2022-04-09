@@ -56,7 +56,7 @@ class TestMhd(unittest.TestCase):
         d1 = mhd.mhd_d23(self.edge_testing[0], self.edge_training[0])
         self.assertEqual(d1, function_3)
 
-    def  test_mhd23_without_mean(self):
+    def test_mhd23_without_mean(self):
         coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
         coordinates_training_img = image_processing.coordinates(self.edge_training[0])
         tree1 = cKDTree(coordinates_test_img)

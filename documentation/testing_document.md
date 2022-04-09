@@ -43,24 +43,31 @@ Here's a picture of the coverage so far:
 
 ![alt text](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/images/CoverageReportCodeCov.png)
 
-## What has been tested so far and how?
+## Unittests
 
-Parts of the program I have tested:
+MNIST
 
-1. Loading data
-	1. Tested by calling the mnist.load_data() and comparing the shape of the arrays to arrays it should present
-2. That test images are in correct shape
-	1. Returning an image from the MNIST dataset and comparing it to a previously made image that it should match
-3. Testing conditional statements between training and testing set
-	1. Testing that the indexes (according to labels) return the correct length arrays.
-4. That after converting images to edge images the arrays return in correct form
-	1. Returning the dataset and comparing its shape to the value it should be
-5. Testing that when forming an image to its coordinates it is in correct form
-	1. Returning an image and comparing its shape to a value it should be in
-6. Testing the distance between point and a set
-	1. Running the calculations "manually" for two images and then calling the function which calculates the distance and comparing that the values match
-7. Testing the actual D22 calculation
-	1. Running the calculations "manually" for two images and then calling the function which calculates the distance and comparing that the values match
+The MNIST dataset has been tested to return in correct shapes (60000, 28, 28) (60000, ) for training images and (10000, 28, 28) (10000, ) for test images
+
+Images
+
+Images have been tested to return in correct for by having a previously built image and comparing it to the return value of thresholded image.
+
+Coordinates
+
+Coordinates have been tested by creating a set of edge images and then returning one of them and comparing the shape to set value. This is a bit tricky, since coordinate shapes can differ between images and a general random testing is quite hard.
+
+Pairwise distance
+
+This is a test between two images. It has been tested by running the function manually for a picture and then calling the actual function and testing if they return the same values. Once again, testing this randomly is pretty hard. I could try modifying the tested values to really simple values so that the calculations could be tested easily.
+
+mhd_d22, mhd_d23, mhd_d23 without mean
+
+These have been basically been tested like pairwise distance. Running the functions manually for two images, then calling the functions and comparing the images. Once again running some simple values where I could calculate the distances easily by hand and then running those values to test them would probably be better.
+
+sorting tests
+
+K-nearest with python's sort has been tested by figuring out a distance list and it's correct order. Then running the sort for that list in no particular order and testing that the return order should be the same. Same has been done for heapq.nsmallest search test. YET TO BE TESTED: Complete heap sort and heapify sort. Kind of ran out of time, so these will be added later.
 
 ## How can the test be run?
 
