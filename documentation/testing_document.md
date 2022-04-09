@@ -11,35 +11,24 @@ As of now, performance tests have been generally tested with 100 iterations on d
 |n=100, k=5     |Mean |Max  |Min  |
 |---------------|-----|-----|-----|
 |Calc. distance |2.66s|5.59s|2.38s|
-|---------------|-----|-----|-----|
 |Python sort    |3,4ms|5,8ms|3,3ms|
-|---------------|-----|-----|-----|
 |heapq.nsmallest|0.6ms|1,1ms|0,6ms|
-|---------------|-----|-----|-----|
 |complete heap  |2.53s|2.77s|2.49s|
-|---------------|-----|-----|-----|
 |heapify        |1.8ms|5.1ms|1.7ms|
 
-I was surprised about the results (this particular test was done on saturday (9.4)), because usually the avg. for calculating a distance has been lower than using the heap, which calculates and sorts distances. I will do more tests and see what comes up next time.
+I was surprised about the results (this particular test was done on saturday (9.4)), because usually the avg. for calculating a distance has been lower than using the heap, which calculates and sorts distances. I will do more tests and see what comes up next time. I was particulary surprised about the max. time of distance calculations.
 
 Below you can also see a table of accuracies for different k-values. All accuracy tests have been done over 100 test images compared to 10k training images (NOTE: tests only done with edge-images, full binary image tests later on).
 
 |k/accuracy|%   |
 |----------|----|
 |k=1       |0.94|
-|----------|----|
 |k=3       |0.95|
-|----------|----|
 |k=5       |0.93|
-|----------|----|
 |k=11      |0.94|
-|----------|----|
 |k=15      |0.94|
-|----------|----|
 |k=21      |0.93|
-|----------|----|
 |k=51      |0.90|
-|----------|----|
 |k=101     |0.88|
 
 EXTRA NOTE: These tests have been ran with D22 calculation. I will be running the other distance calculations in the future to compare accuracies.
