@@ -1,41 +1,28 @@
 ## Performance tests
 
-As of now, performance tests have been generally tested with 100 iterations on different parts of the program, using k-value of 5 if not stated otherwise. My plan is to test more with different iterations and k-values in the future. Below you can read an explanation and the results of the tests.
+Performance tests are up to par now. Explanation below
 
-- 100 iterations of calculating distances for one test image against 10k training images
-- 100 iterations of sorting with python's sorted function
-- 100 iterations of sorting with calling heapq.nsmallest for a list-type structure
-- 100 iterations of sorting AND calculating distances with heapq heap.
-- 100 iterations of using heapq's heapify and calling for k-shortest distances.
+- Top row, leftmost: Sorting times. Done over 5 loops and looping again over 8 different k-values for one picture (picture changes between the five loops). Every sort for 
+one k-value is performed a 100 times again, to get averages from a large amount of samples.
+- Top row, middle: Distance calculation times. Iterated 100 times and distance calculation used is D22, a test image against 10k training images on every loop.
+- Top row, rightmost: Distance calculation times. Same as before but uses heap structure, so keep in mind that this method also sorts and chooses k-shortest distances. To 
+compare this fairly to D22 calculation times, you should add up sort times to D22 calculation times.
+- Bottom row, leftmost: Accuracy calculations for three different distance calculation methods: D22, D23 and D23 with no mean (1/N_a) included. Tested over 100 test images 
+and calculates accuracies for 8 different k-values. Also this accuracy calculation uses edge images.
+- Bottom row, middle: Same as before for accuracy calculations but uses ordinary binary images, no edge images.
 
-|n=100, k=5     |Mean |Max  |Min  |Avg for pairwise calc.  |
-|---------------|-----|-----|-----|------------------------|
-|Calc. distance |2.66s|5.59s|2.38s|0.25ms                  |
-|Python sort    |3,4ms|5,8ms|3,3ms|NaN                     |
-|heapq.nsmallest|0.6ms|1,1ms|0,6ms|NaN                     |
-|complete heap  |2.53s|2.77s|2.49s|NaN                     |
-|heapify        |1.8ms|5.1ms|1.7ms|NaN                     |
 
 ![alt text](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/images/PerformanceStats.png)
 
 (Tested on 22.4.2022)
 
-I was surprised about the results (this particular test was done on saturday (9.4)), because usually the avg. for calculating a distance has been lower than using the heap, which calculates and sorts distances. I will do more tests and see what comes up next time. I was particulary surprised about the max. time of distance calculations.
+## Notes about performance test results
 
-Below you can also see a table of accuracies for different k-values. All accuracy tests have been done over 100 test images compared to 10k training images (NOTE: tests only done with edge-images, full binary image tests later on).
+I haven't found a reason for the jitter in small k-value sort times in the first graph. It comes and goes when I run the tests. This could be some type of overhead thing or 
+just purely my computer as a bit of a cough when I run the program. Otherwise the performance tests seem reliable and sensible. I will be updating them every week to have 
+the latest tests at hand.
 
-|k/accuracy|%   |
-|----------|----|
-|k=1       |0.94|
-|k=3       |0.95|
-|k=5       |0.93|
-|k=11      |0.94|
-|k=15      |0.94|
-|k=21      |0.93|
-|k=51      |0.90|
-|k=101     |0.88|
-
-EXTRA NOTE: These tests have been ran with D22 calculation. I will be running the other distance calculations in the future to compare accuracies.
+Also I think I will modify the graphs to have more ticks on y-axis. I noticed that reading them can be a bit hard with such a large gap between ticks.
 
 ## Coverage report
 
@@ -63,11 +50,13 @@ Coordinates have been tested by creating a set of edge images and then returning
 
 ### Pairwise distance
 
-This is a test between two images. It has been tested by running the function manually for a picture and then calling the actual function and testing if they return the same values. Once again, testing this randomly is pretty hard. I could try modifying the tested values to really simple values so that the calculations could be tested easily.
+This is a test between two images. It creates two simple 2x3 matrices and calculates distances between the matrices manually, then calls a function for the matrices and 
+compares if the distance calculations match.
 
 ### mhd_d22, mhd_d23, mhd_d23 without mean
 
-These have been basically been tested like pairwise distance. Running the functions manually for two images, then calling the functions and comparing the images. Once again running some simple values where I could calculate the distances easily by hand and then running those values to test them would probably be better.
+These have been basically been tested like pairwise distance. Creating two simple matrices and doing the calculations manually and once again comparing the results to the 
+functions being tested.
 
 ### sorting tests
 
