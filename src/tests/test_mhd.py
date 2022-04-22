@@ -1,8 +1,11 @@
 import unittest
 from tensorflow.keras.datasets import mnist
 from scipy.spatial import cKDTree
+import numpy as np
 from dataset import image_processing
 from distance import mhd
+import heapq
+import math
 
 class TestMhd(unittest.TestCase):
 
@@ -14,59 +17,57 @@ class TestMhd(unittest.TestCase):
         self.edge_testing = image_processing.create_binary_edge_image(self.test_images)
 
     def test_min_distance_pairwise(self):
-        coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
-        coordinates_training_img = image_processing.coordinates(self.edge_training[0])
-        tree1 = cKDTree(coordinates_test_img)
-        tree2 = cKDTree(coordinates_training_img)
-        distance_1 = tree1.query(coordinates_training_img)[0]
-        distance_2 = tree2.query(coordinates_test_img)[0]
-
-        d1, d2 = mhd.calculate_minimum_distance_pairwise(self.edge_testing[0], self.edge_training[0])
-        self.assertTrue((d1 == distance_1).all())
-        self.assertTrue((d2 == distance_2).all())
+        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
+        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
+        img1_transp = np.array(np.where(img_1))
+        img2_transp = np.array(np.where(img_2))
+        dist_squared = np.sum(np.square(img1_transp-img2_transp))
+        d1, d2 = mhd.calculate_minimum_distance_pairwise(img_1, img_2)
+        self.assertTrue(d1 == dist_squared)
+        self.assertTrue(d2 == dist_squared)
 
 
 
     def test_mhd22(self):
-        coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
-        coordinates_training_img = image_processing.coordinates(self.edge_training[0])
-        tree1 = cKDTree(coordinates_test_img)
-        tree2 = cKDTree(coordinates_training_img)
-        distance_1 = tree1.query(coordinates_training_img)[0]
-        distance_2 = tree2.query(coordinates_test_img)[0]
-        distance_1 = distance_1.mean()
-        distance_2 = distance_2.mean()
+        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
+        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
+        img1_transp = np.array(np.where(img_1))
+        img2_transp = np.array(np.where(img_2))
+        dist_squared = np.sum(np.square(img1_transp-img2_transp))
+        dist_squared2 = np.sum(np.square(img2_transp-img1_transp))
+        distance_1 = dist_squared.mean()
+        distance_2 = dist_squared2.mean()
         max_length = max(distance_1, distance_2)
 
 
-        d1 = mhd.mhd_d22(self.edge_testing[0], self.edge_training[0])
+        d1 = mhd.mhd_d22(img_1, img_2)
         self.assertEqual(d1, max_length)
 
     def test_mhd23(self):
-        coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
-        coordinates_training_img = image_processing.coordinates(self.edge_training[0])
-        tree1 = cKDTree(coordinates_test_img)
-        tree2 = cKDTree(coordinates_training_img)
-        distance_1 = tree1.query(coordinates_training_img)[0]
-        distance_2 = tree2.query(coordinates_test_img)[0]
-        distance_1 = distance_1.mean()
-        distance_2 = distance_2.mean()
-        function_3 = (distance_1 + distance_2) / 2
+        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
+        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
+        img1_transp = np.array(np.where(img_1))
+        img2_transp = np.array(np.where(img_2))
+        dist_squared = np.sum(np.square(img1_transp-img2_transp))
+        dist_squared2 = np.sum(np.square(img2_transp-img1_transp))
+        distance_1 = dist_squared.mean()
+        distance_2 = dist_squared2.mean()
+        function_3 = (distance_1+distance_2)/2
 
-        d1 = mhd.mhd_d23(self.edge_testing[0], self.edge_training[0])
+        d1 = mhd.mhd_d23(img_1, img_2)
         self.assertEqual(d1, function_3)
 
     def test_mhd23_without_mean(self):
-        coordinates_test_img = image_processing.coordinates(self.edge_testing[0])
-        coordinates_training_img = image_processing.coordinates(self.edge_training[0])
-        tree1 = cKDTree(coordinates_test_img)
-        tree2 = cKDTree(coordinates_training_img)
-        distance_1 = tree1.query(coordinates_training_img)[0]
-        distance_2 = tree2.query(coordinates_test_img)[0]
-        distance_1 = distance_1.sum()
-        distance_2 = distance_2.sum()
-        function_3 = (distance_1 + distance_2) / 2
-        d1 = mhd.mhd_d23_without_mean(self.edge_testing[0], self.edge_training[0])
+        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
+        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
+        img1_transp = np.array(np.where(img_1))
+        img2_transp = np.array(np.where(img_2))
+        dist_squared = np.sum(np.square(img1_transp-img2_transp))
+        dist_squared2 = np.sum(np.square(img2_transp-img1_transp))
+        distance_1 = dist_squared.sum()
+        distance_2 = dist_squared2.sum()
+        function_3 = (distance_1 + distance_2)/2
+        d1 = mhd.mhd_d23_without_mean(img_1, img_2)
         self.assertEqual(d1, function_3)
 
     def test_k_nearest(self):
@@ -80,3 +81,9 @@ class TestMhd(unittest.TestCase):
         test_list = [[3, 2], [4, 7], [5, 10], [2, 8], [1, 9]]
         sorted_list, indexes = mhd.k_nearest_with_heap_search(5, test_list)
         self.assertEqual(sorted_list, [[1, 9], [2, 8], [3, 2], [4, 7], [5, 10]])
+
+    def test_heapify_sort(self):
+        number_list = [3, 5, 1, 4, 6, 7]
+        heapq.heapify(number_list)
+        sorted_distances = heapq.nsmallest(3, number_list)
+        self.assertEqual(mhd.k_nearest_with_heapify(3, number_list), sorted_distances)

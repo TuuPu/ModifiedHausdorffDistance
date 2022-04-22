@@ -16,6 +16,10 @@ As of now, performance tests have been generally tested with 100 iterations on d
 |complete heap  |2.53s|2.77s|2.49s|NaN                     |
 |heapify        |1.8ms|5.1ms|1.7ms|NaN                     |
 
+![alt text](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/images/PerformanceStats.png)
+
+(Tested on 22.4.2022)
+
 I was surprised about the results (this particular test was done on saturday (9.4)), because usually the avg. for calculating a distance has been lower than using the heap, which calculates and sorts distances. I will do more tests and see what comes up next time. I was particulary surprised about the max. time of distance calculations.
 
 Below you can also see a table of accuracies for different k-values. All accuracy tests have been done over 100 test images compared to 10k training images (NOTE: tests only done with edge-images, full binary image tests later on).

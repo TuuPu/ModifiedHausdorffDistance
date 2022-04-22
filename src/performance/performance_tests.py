@@ -1,3 +1,4 @@
+#pylint: disable=W0612
 import statistics
 import time
 from distance import mhd

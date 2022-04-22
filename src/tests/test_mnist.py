@@ -60,7 +60,7 @@ class TestMnist(unittest.TestCase):
         self.assertEqual(edge_set.shape, (9786, 28, 28))
 
     def test_coordinates(self):
-        (x_train, y_train), (x_test, y_test) =  mnist.load_data()
+        (x_train, y_train), (x_test, y_test) = mnist.load_data()
         train_images, selected_labels = image_processing.sort_images_and_threshold(x_test, y_test)
         edge_set = image_processing.create_binary_edge_image(train_images)
         print(image_processing.coordinates(edge_set[0]))
