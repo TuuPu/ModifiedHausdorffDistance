@@ -7,7 +7,27 @@ from distance import mhd
 import heapq
 import math
 
+
+def create_matrices():
+    arr1 = np.random.rand(28, 28) > 0.5
+    arr2 = np.random.rand(28, 28) > 0.5
+    img_1 = arr1.reshape(28, 28)
+    img_2 = arr2.reshape(28, 28)
+    img1_transp = np.array(np.where(img_1))
+    img2_transp = np.array(np.where(img_2))
+    return img_1, img_2, img1_transp, img2_transp
+
+def distances(img1, img2):
+    dist_squared=[]
+    for coord in zip(img1[0,:], img1[1,:]):
+        dist_squared.append((np.sqrt((img2[0,:]-coord[0])**2+(img2[1,:]-coord[1])**2)).min())
+    return np.array(dist_squared)
+
 class TestMhd(unittest.TestCase):
+
+
+
+
 
     def setUp(self):
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -17,57 +37,56 @@ class TestMhd(unittest.TestCase):
         self.edge_testing = image_processing.create_binary_edge_image(self.test_images)
 
     def test_min_distance_pairwise(self):
-        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
-        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
-        img1_transp = np.array(np.where(img_1))
-        img2_transp = np.array(np.where(img_2))
-        dist_squared = np.sum(np.square(img1_transp-img2_transp))
-        d1, d2 = mhd.calculate_minimum_distance_pairwise(img_1, img_2)
-        self.assertTrue(d1 == dist_squared)
-        self.assertTrue(d2 == dist_squared)
+        img1, img2, img1_transp, img2_transp = create_matrices()
+        dist_squared = distances(img1_transp, img2_transp)
+        dist_squared2 = distances(img2_transp, img1_transp)
+        dist_squared = np.array(dist_squared)
+        dist_squared2 = np.array(dist_squared2)
+
+        d1, d2 = mhd.calculate_minimum_distance_pairwise(img1, img2)
+        np.testing.assert_allclose(dist_squared2, d1)
+        np.testing.assert_allclose(dist_squared, d2)
+
 
 
 
     def test_mhd22(self):
-        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
-        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
-        img1_transp = np.array(np.where(img_1))
-        img2_transp = np.array(np.where(img_2))
-        dist_squared = np.sum(np.square(img1_transp-img2_transp))
-        dist_squared2 = np.sum(np.square(img2_transp-img1_transp))
+        img1, img2, img1_transp, img2_transp = create_matrices()
+        dist_squared = distances(img1_transp, img2_transp)
+        dist_squared2 = distances(img2_transp, img1_transp)
+        dist_squared = np.array(dist_squared)
+        dist_squared2 = np.array(dist_squared2)
         distance_1 = dist_squared.mean()
         distance_2 = dist_squared2.mean()
         max_length = max(distance_1, distance_2)
 
 
-        d1 = mhd.mhd_d22(img_1, img_2)
+        d1 = mhd.mhd_d22(img1, img2)
         self.assertEqual(d1, max_length)
 
     def test_mhd23(self):
-        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
-        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
-        img1_transp = np.array(np.where(img_1))
-        img2_transp = np.array(np.where(img_2))
-        dist_squared = np.sum(np.square(img1_transp-img2_transp))
-        dist_squared2 = np.sum(np.square(img2_transp-img1_transp))
+        img1, img2, img1_transp, img2_transp = create_matrices()
+        dist_squared = distances(img1_transp, img2_transp)
+        dist_squared2 = distances(img2_transp, img1_transp)
+        dist_squared = np.array(dist_squared)
+        dist_squared2 = np.array(dist_squared2)
         distance_1 = dist_squared.mean()
         distance_2 = dist_squared2.mean()
         function_3 = (distance_1+distance_2)/2
 
-        d1 = mhd.mhd_d23(img_1, img_2)
+        d1 = mhd.mhd_d23(img1, img2)
         self.assertEqual(d1, function_3)
 
     def test_mhd23_without_mean(self):
-        img_1 = np.array([[0, 1, 0], [0, 0, 0]])
-        img_2 = np.array([[0, 0, 0], [0, 1, 0]])
-        img1_transp = np.array(np.where(img_1))
-        img2_transp = np.array(np.where(img_2))
-        dist_squared = np.sum(np.square(img1_transp-img2_transp))
-        dist_squared2 = np.sum(np.square(img2_transp-img1_transp))
+        img1, img2, img1_transp, img2_transp = create_matrices()
+        dist_squared = distances(img1_transp, img2_transp)
+        dist_squared2 = distances(img2_transp, img1_transp)
+        dist_squared = np.array(dist_squared)
+        dist_squared2 = np.array(dist_squared2)
         distance_1 = dist_squared.sum()
         distance_2 = dist_squared2.sum()
         function_3 = (distance_1 + distance_2)/2
-        d1 = mhd.mhd_d23_without_mean(img_1, img_2)
+        d1 = mhd.mhd_d23_without_mean(img1, img2)
         self.assertEqual(d1, function_3)
 
     def test_k_nearest(self):
