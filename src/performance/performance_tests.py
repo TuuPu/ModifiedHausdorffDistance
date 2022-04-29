@@ -114,6 +114,12 @@ def time_with_using_heapify(distance_list, iterations, k):
     return mean_sort, max_sort, min_sort
 
 def sort_time_means(edge_testing_set, edge_training_set):
+    '''
+    Calculates average sort times for all sorting methods
+    :param edge_testing_set: images from testing set
+    :param edge_training_set: images from training set
+    :return: averages (time) of different sort methods
+    '''
     k_values = [1, 3, 5, 11, 15, 21, 51, 101]
     fivek_mean_py_list = np.zeros((5, len(k_values)))
     fivek_heap_mean_list = np.zeros((5, len(k_values)))
@@ -137,6 +143,12 @@ def sort_time_means(edge_testing_set, edge_training_set):
            np.mean(fivek_heapify_mean_list,  axis=0)
 
 def calculate_times(edge_testing_set, edge_training_set):
+    '''
+    Calculates time for distance calculations
+    :param edge_testing_set:
+    :param edge_training_set:
+    :return:
+    '''
     time_list = []
     time_list_heap = []
     for i in range(1, 101):
@@ -159,6 +171,16 @@ def calculate_times(edge_testing_set, edge_training_set):
 def calculate_all_accuracies(edge_testing_set, edge_training_set,
                              testing_images, training_images,
                              selected_test_labels):
+    '''
+    Calculates accuracies of different distance measures
+    :param edge_testing_set: testing images (only edges)
+    :param edge_training_set: training images (only edges)
+    :param testing_images: full binary testing images
+    :param training_images: full binary training images
+    :param selected_test_labels: labels of found results
+    :return: Accuracies for different distance calculations
+    for both, edge and full  binary images
+    '''
     k_values = [1, 3, 5, 11, 15, 21, 51, 101]
     num_test_imgs = 100
     hits_table = \

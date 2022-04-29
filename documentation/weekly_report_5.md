@@ -6,7 +6,7 @@ sorting mechanisms in use that I can compare (Python's sorted(), heapq sort agai
 between using edge images and normal binary images. I also made the distance tests more sensible, creating a simple 2x3 matrix, calculating distances and comparing it to my 
 functions value returned.
 
-## How did I move progres?
+## How did I progress?
 
 Performance tests are pretty much done, technical side is done, UI is almost done. Next week I will finish up the UI and make testing even better and cover the rest of the 
 parts that need to be covered.

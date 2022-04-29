@@ -13,6 +13,8 @@
 
 [Testing documentation](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/testing_document.md)
 
+[User guide](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/user_guide.md)
+
 ### Weekly reports
 
 [Week 1 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_1.md)
@@ -25,36 +27,4 @@
 
 [Week 5 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_5.md)
 
-### Get the project running
-
-`poetry install`
-
-### Testing
-
-```
-poetry shell
-pytest
-```
-
-### Coverage
-
-```
-poetry shell
-coverage run --branch -m pytest; coverage html
-```
-
-This creates a htmlcov directory and by opening the html.index file you can see the coverage report. You can access the same information by going to codecov from the repository front page by clicking the badge.
-
-### Running the program
-
-```
-poetry shell
-python src/app.py
-```
-
-### Pylint
-
-```
-poetry shell
-pylint src
-```
+[Week 6 report](https://github.com/TuuPu/ModifiedHausdorffDistance/blob/main/documentation/weekly_report_6.md)

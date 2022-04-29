@@ -15,8 +15,10 @@ import time
 
 def calculate_distances_for_set(test_image, training_image_set):
     '''
-    Calculates distances for a test image against
-    10k training images
+    Calculates  distances for a set using mhd D22
+    :param test_image: test image to be tested
+    :param training_image_set: training set of images
+    :return: distances between test image and training set
     '''
     distance_list = []
     for i, image in enumerate(training_image_set):
@@ -24,12 +26,24 @@ def calculate_distances_for_set(test_image, training_image_set):
     return distance_list
 
 def calculate_distances_for_set_mhd23(test_image, training_image_set):
+    '''
+    Calculates distances for a set using mhd D23
+    :param test_image: test image to be tested
+    :param training_image_set: training set of images
+    :return: distances between test image and training images
+    '''
     distance_list = []
     for i, image in enumerate(training_image_set):
         distance_list.append([mhd.mhd_d23(test_image, image), i])
     return distance_list
 
 def calculate_distancses_for_set_mhd23_wo_mean(test_image, training_image_set):
+    '''
+    Calculates distances for a set using mhd D23 without mean
+    :param test_image: test image to be tested
+    :param training_image_set: training set of images
+    :return: distances between test image and training images
+    '''
     distance_list = []
     for i, image in enumerate(training_image_set):
         distance_list.append([mhd.mhd_d23_without_mean(test_image, image), i])
@@ -37,9 +51,11 @@ def calculate_distancses_for_set_mhd23_wo_mean(test_image, training_image_set):
 
 def get_labels(indexes):
     '''
-    Fetches labels and most common label
-    AKA fetches the number that the  k-NN
-    recommends the image to be
+    Used to find which images are found in k-nearest
+    set.
+    :param indexes: Indexes of images in a list
+    :return: all labels of found matches, most common
+    label and amount of all found labels
     '''
     labels = []
     for i in indexes:
@@ -56,36 +72,6 @@ def main():
         image_processing.sort_images_and_threshold(x_train, y_train)
     edge_training_set = image_processing.create_binary_edge_image(training_images)
     edge_testing_set = image_processing.create_binary_edge_image(testing_images)
-    '''
-    Animated for one pic at a time x 40
-    and shows the suggested labels on
-    a bar chart below the image.
-    '''
-    '''
-    fig, axs = plt.subplots(2, 2)
-    test_values = [1, 4, 8, 0, 2, 4, 8, 0, 8, 8]
-    value_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-                  12, 13, 14, 15, 16, 17, 18, 19, 20]
-    k_values_zero_to_nine = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    for i in range(40):
-        axs[0, 0].plot(k_values_zero_to_nine, test_values)
-        rand_val = random.randint(0, 9785)
-        axs[0, 1].cla()
-        axs[1, 1].cla()
-        axs[0, 1].imshow(testing_images[rand_val])
-        distance_list = calculate_distances_for_set\
-            (testing_images[rand_val], training_images)
-        sorted_list, indexes = \
-            mhd.k_nearest_with_heap_search(20, distance_list)
-        labels, label, label_amount = get_labels(indexes)
-        axs[1, 1].bar(label_amount.keys(), label_amount.values())
-        axs[1, 1].set_xticks(k_values_zero_to_nine)
-        axs[1, 1].set_yticks(value_list)
-        axs[0, 1].set_title("frame {}".format(i))
-        axs[1, 1].set_title("frame {}".format(i))
-        axs[1, 0].set_visible(False)
-        plt.pause(0.8)
-    '''
 
     '''
     Performance test
@@ -202,7 +188,7 @@ def main():
 
 
 
-
+    '''Used for labeling the plots'''
     k_values = [1, 3, 5, 11, 15, 21, 51, 101]
     value_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
                   12, 13, 14, 15, 16, 17, 18, 19, 20]
@@ -213,6 +199,7 @@ def main():
     fig, axs = plt.subplots(3, 3)
 
 
+    '''Undo comments for performance testing'''
     '''
     py_sort_mean, heap_sort_mean, heapify_sort_mean =\
         performance_tests.sort_time_means(edge_testing_set, edge_training_set)              
@@ -222,6 +209,10 @@ def main():
         performance_tests.calculate_all_accuracies(edge_testing_set, edge_training_set,
                                                    testing_images, training_images,
                                                    selected_test_labels)
+    '''
+
+    '''Prints to get updated data'''
+    '''
     print("pysort mean", py_sort_mean)
     print("heap  sort mean", heap_sort_mean)
     print("Heapify sort mean", heapify_sort_mean)
@@ -235,6 +226,7 @@ def main():
     print("no mean no edge", no_mean_no_edge_prctg)
     '''
 
+    '''Runs the UI using matplotlib graphs'''
     for i in range(40):
         rand_val = random.randint(0, 9785)
         axs[0, 0].plot(k_values, py_sort_mean)
@@ -285,8 +277,8 @@ def main():
         axs[2, 2].bar(label_amount.keys(), label_amount.values())
         axs[2, 2].set_xticks(k_values_zero_to_nine)
         axs[2, 2].set_yticks(value_list)
-        axs[1, 2].set_title("frame {}".format(i))
-        axs[2, 2].set_title("frame {}".format(i))
+        axs[1, 2].set_title("frame {}".format(selected_test_labels[rand_val]))
+        axs[2, 2].set_title("frame {}".format("vote"))
         axs[2, 0].set_visible(False)
         axs[2, 1].set_visible(False)
         plt.pause(0.8)

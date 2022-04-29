@@ -50,17 +50,17 @@ Coordinates have been tested by creating a set of edge images and then returning
 
 ### Pairwise distance
 
-This is a test between two images. It creates two simple 2x3 matrices and calculates distances between the matrices manually, then calls a function for the matrices and 
+This is a test between two images. It creates two random 28x28 matrices and calculates distances between the matrices manually, then calls a function for the matrices and 
 compares if the distance calculations match.
 
 ### mhd_d22, mhd_d23, mhd_d23 without mean
 
-These have been basically been tested like pairwise distance. Creating two simple matrices and doing the calculations manually and once again comparing the results to the 
+These have been basically been tested like pairwise distance. Creating two matrices and doing the calculations manually and once again comparing the results to the 
 functions being tested.
 
 ### sorting tests
 
-K-nearest with python's sort has been tested by figuring out a distance list and it's correct order. Then running the sort for that list in no particular order and testing that the return order should be the same. Same has been done for heapq.nsmallest search test. YET TO BE TESTED: Complete heap sort and heapify sort. Kind of ran out of time, so these will be added later.
+K-nearest with python's sort has been tested by figuring out a distance list and it's correct order. Then running the sort for that list in no particular order and testing that the return order should be the same. Same has been done for heapq.nsmallest search test.
 
 ## How can the test be run?
 
@@ -70,9 +70,3 @@ pytest
 ```
 
 in the root directory.
-
-## Problems with testing
-
-Right now I'm running the tests on specific images and I'm wondering how I could make them more general and be assured everything works correctly. It is hard to find alternative setups for distance calculations where I could give any two images and then compare the distance result to some value it should match.
-
-If there are any tips and tricks for this, I would greatly appreciate them.
