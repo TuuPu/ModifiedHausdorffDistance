@@ -4,10 +4,6 @@ from scipy.spatial import cKDTree
 from dataset import image_processing
 
 
-
-
-
-
 def calculate_minimum_distance_pairwise(test_image, training_image):
     '''
     Calculates d(a, B) = min_(b in B) || a - b ||

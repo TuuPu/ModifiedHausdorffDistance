@@ -7,63 +7,13 @@ from dataset import image_processing
 from distance import mhd
 from performance import performance_tests
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+from matplotlib.widgets import Button
 import time
 # NOTE: Importing the mnist database takes about 7-10 seconds
-# the program itself runs in about 1.5 seconds.
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-def calculate_distances_for_set(test_image, training_image_set):
-    '''
-    Calculates  distances for a set using mhd D22
-    :param test_image: test image to be tested
-    :param training_image_set: training set of images
-    :return: distances between test image and training set
-    '''
-    distance_list = []
-    for i, image in enumerate(training_image_set):
-        distance_list.append([mhd.mhd_d22(test_image, image), i])
-    return distance_list
-
-def calculate_distances_for_set_mhd23(test_image, training_image_set):
-    '''
-    Calculates distances for a set using mhd D23
-    :param test_image: test image to be tested
-    :param training_image_set: training set of images
-    :return: distances between test image and training images
-    '''
-    distance_list = []
-    for i, image in enumerate(training_image_set):
-        distance_list.append([mhd.mhd_d23(test_image, image), i])
-    return distance_list
-
-def calculate_distancses_for_set_mhd23_wo_mean(test_image, training_image_set):
-    '''
-    Calculates distances for a set using mhd D23 without mean
-    :param test_image: test image to be tested
-    :param training_image_set: training set of images
-    :return: distances between test image and training images
-    '''
-    distance_list = []
-    for i, image in enumerate(training_image_set):
-        distance_list.append([mhd.mhd_d23_without_mean(test_image, image), i])
-    return distance_list
-
-def get_labels(indexes):
-    '''
-    Used to find which images are found in k-nearest
-    set.
-    :param indexes: Indexes of images in a list
-    :return: all labels of found matches, most common
-    label and amount of all found labels
-    '''
-    labels = []
-    for i in indexes:
-        labels.append(int(i/1000))
-    label = Counter(labels)
-    label_amount = Counter(labels)
-    label = label.most_common(1)[0][0]
-    return labels, label, label_amount
 
 def main():
     testing_images, selected_test_labels = \
@@ -186,8 +136,6 @@ def main():
     d23_no_edge_prctg = [0.93, 0.95, 0.95, 0.95, 0.96, 0.96, 0.97, 0.96]
     no_mean_no_edge_prctg = [0.93, 0.96, 0.95, 0.96, 0.95, 0.95, 0.94, 0.94]
 
-
-
     '''Used for labeling the plots'''
     k_values = [1, 3, 5, 11, 15, 21, 51, 101]
     value_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
@@ -196,8 +144,6 @@ def main():
     box_plot_secs = [1, 2, 3, 4, 5]
     bar_plot_y_axis = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
     x_axis = np.arange(len(k_values))
-    fig, axs = plt.subplots(3, 3)
-
 
     '''Undo comments for performance testing'''
     '''
@@ -227,61 +173,107 @@ def main():
     '''
 
     '''Runs the UI using matplotlib graphs'''
-    for i in range(40):
-        rand_val = random.randint(0, 9785)
-        axs[0, 0].plot(k_values, py_sort_mean)
-        axs[0, 0].plot(k_values, heap_sort_mean)
-        axs[0, 0].plot(k_values, heapify_sort_mean)
-        axs[0, 0].set_xlabel("k-values")
-        axs[0, 0].set_ylabel("Seconds")
-        axs[0, 0].set_title("Sort times")
-        axs[0, 0].legend(['sorted()', 'heapq', 'heapify'])
-        axs[0, 1].boxplot(time_list)
-        axs[0, 1].set_title("Distance calculation times")
-        axs[0, 1].set_ylabel("Seconds")
-        axs[0, 1].set_yticks(box_plot_secs)
-        axs[0, 2].boxplot(time_list_heap)
-        axs[0, 2].set_title("Distance calculations with heap, k=5")
-        axs[0, 2].set_ylabel("Seconds")
-        axs[0, 2].set_yticks(box_plot_secs)
-        axs[1, 0].bar\
-            (x_axis +0.20, percentages, width=0.2)
-        axs[1, 0].bar\
-            (x_axis +0.20*2, d23_percentages, width=0.2)
-        axs[1, 0].bar\
-            (x_axis +0.20*3, d23_no_mean_percentages, width=0.2)
-        axs[1, 0].set_xticks(x_axis, k_values)
-        axs[1, 0].set_xlabel("k-values")
-        axs[1, 0].set_ylabel("percentage")
-        axs[1, 0].set_yticks(bar_plot_y_axis)
-        axs[1, 0].legend(['D22', 'D23', 'D23 no mean'])
-        axs[1, 1].bar\
-            (x_axis -0.20, no_edge_prctg, width=0.2)
-        axs[1, 1].bar\
-            (x_axis, d23_no_edge_prctg, width=0.2)
-        axs[1, 1].bar\
-            (x_axis +0.20, no_mean_no_edge_prctg, width=0.2)
-        axs[1, 1].set_xticks(x_axis, k_values)
-        axs[1, 1].set_xlabel("k-values")
-        axs[1, 1].set_ylabel("percentages")
-        axs[1, 1].set_yticks(bar_plot_y_axis)
-        axs[1, 1].legend(['D22', 'D23', 'D23 no mean'])
-        axs[1, 2].cla()
-        axs[2, 2].cla()
-        axs[1, 2].imshow(testing_images[rand_val])
-        distance_list = calculate_distances_for_set \
-            (testing_images[rand_val], training_images)
-        sorted_list, indexes = \
-            mhd.k_nearest_with_heap_search(20, distance_list)
-        labels, label, label_amount = get_labels(indexes)
-        axs[2, 2].bar(label_amount.keys(), label_amount.values())
-        axs[2, 2].set_xticks(k_values_zero_to_nine)
-        axs[2, 2].set_yticks(value_list)
-        axs[1, 2].set_title("frame {}".format(selected_test_labels[rand_val]))
-        axs[2, 2].set_title("frame {}".format("vote"))
-        axs[2, 0].set_visible(False)
-        axs[2, 1].set_visible(False)
-        plt.pause(0.8)
+    running = True
+    while (running):
+        print("What do you want to see?")
+        print("1: general statistics")
+        print("2: Test a random number")
+        print("3: Run a loop of 20 random numbers")
+        print("4: ASCII gorgeousness")
+        print("q: Quit program")
+        operation = input("Select one: ")
+
+        if operation == '1':
+            fig, axs = plt.subplots(2, 3)
+            axs[0, 0].plot(k_values, py_sort_mean, color='blue')
+            axs[0, 0].plot(k_values, heap_sort_mean, color='orange')
+            axs[0, 0].plot(k_values, heapify_sort_mean, color='green')
+            axs[0, 0].set_xlabel("k-values")
+            axs[0, 0].set_ylabel("Seconds")
+            axs[0, 0].set_title("Sort times")
+            axs[0, 0].legend(['sorted()', 'heapq', 'heapify'])
+            axs[0, 0].set_title("Sort times")
+            axs[0, 1].boxplot(time_list)
+            axs[0, 1].set_title("Distance calculation times")
+            axs[0, 1].set_ylabel("Seconds")
+            axs[0, 1].set_yticks(box_plot_secs)
+            axs[0, 2].boxplot(time_list_heap)
+            axs[0, 2].set_title("Distance calculations with heap, k=5")
+            axs[0, 2].set_ylabel("Seconds")
+            axs[0, 2].set_yticks(box_plot_secs)
+            axs[1, 0].bar \
+                (x_axis + 0.20, percentages, width=0.2, color='blue')
+            axs[1, 0].bar \
+                (x_axis + 0.20 * 2, d23_percentages, width=0.2, color='orange')
+            axs[1, 0].bar \
+                (x_axis + 0.20 * 3, d23_no_mean_percentages, width=0.2, color='green')
+            axs[1, 0].set_xticks(x_axis, k_values)
+            axs[1, 0].set_xlabel("k-values")
+            axs[1, 0].set_ylabel("percentage")
+            axs[1, 0].set_yticks(bar_plot_y_axis)
+            axs[1, 0].legend(['D22', 'D23', 'D23 no mean'], loc='lower right')
+            axs[1, 0].set_title("Accuracy with edge images")
+            axs[1, 1].bar \
+                (x_axis - 0.20, no_edge_prctg, width=0.2, color='blue')
+            axs[1, 1].bar \
+                (x_axis, d23_no_edge_prctg, width=0.2, color='orange')
+            axs[1, 1].bar \
+                (x_axis + 0.20, no_mean_no_edge_prctg, width=0.2, color='green')
+            axs[1, 1].set_xticks(x_axis, k_values)
+            axs[1, 1].set_xlabel("k-values")
+            axs[1, 1].set_ylabel("percentages")
+            axs[1, 1].set_yticks(bar_plot_y_axis)
+            axs[1, 1].legend(['D22', 'D23', 'D23 no mean'], loc='lower right')
+            axs[1, 1].set_title("Accuracy with binary images")
+            axs[1, 2].set_visible(False)
+            plt.show()
+
+        elif operation == '2':
+            rand_val = random.randint(0, 9785)
+            fig, axs = plt.subplots(2)
+            axs[0].imshow(testing_images[rand_val])
+            distance_list = performance_tests.calculate_distances_for_set \
+                (testing_images[rand_val], training_images)
+            sorted_list, indexes = \
+                mhd.k_nearest_with_heap_search(20, distance_list)
+            labels, label, label_amount = performance_tests.get_labels(indexes)
+            axs[1].bar(label_amount.keys(), label_amount.values())
+            axs[1].set_xticks(k_values_zero_to_nine)
+            axs[1].set_yticks(value_list)
+            axs[0].set_title("number {}".format(selected_test_labels[rand_val]))
+            axs[1].set_title("test number {}".format("vote"))
+            fig.tight_layout()
+            plt.show()
+
+        elif operation == '3':
+            fig, axs = plt.subplots(2)
+            for i in range(20):
+                axs[0].cla()
+                axs[1].cla()
+                rand_val = random.randint(0, 9785)
+                axs[0].imshow(testing_images[rand_val])
+                distance_list = performance_tests.calculate_distances_for_set \
+                    (testing_images[rand_val], training_images)
+                sorted_list, indexes = \
+                    mhd.k_nearest_with_heap_search(20, distance_list)
+                labels, label, label_amount = performance_tests.get_labels(indexes)
+                axs[1].bar(label_amount.keys(), label_amount.values())
+                axs[1].set_xticks(k_values_zero_to_nine)
+                axs[1].set_yticks(value_list)
+                axs[0].set_title("number {}".format(selected_test_labels[rand_val]))
+                axs[1].set_title("test number {}".format("vote"))
+                fig.tight_layout()
+                plt.pause(0.8)
+
+        elif operation == '4':
+            rand_val = random.randint(0, 9785)
+            print(testing_images[rand_val])
+        elif operation == 'q':
+            running = False
+        else:
+            print("Not cool, don't try to break this")
+
+
 
 if __name__ == "__main__":
     main()

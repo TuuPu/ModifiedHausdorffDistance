@@ -25,10 +25,6 @@ def distances(img1, img2):
 
 class TestMhd(unittest.TestCase):
 
-
-
-
-
     def setUp(self):
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
         self.training_images, selected_training_labels = image_processing.sort_images_and_threshold(x_train, y_train)
@@ -37,6 +33,13 @@ class TestMhd(unittest.TestCase):
         self.edge_testing = image_processing.create_binary_edge_image(self.test_images)
 
     def test_min_distance_pairwise(self):
+        '''
+        Calculates distances manually
+        and compares that the used function in the
+        program returns the same value.
+
+        This is for pairwise distance for two matrices
+        '''
         img1, img2, img1_transp, img2_transp = create_matrices()
         dist_squared = distances(img1_transp, img2_transp)
         dist_squared2 = distances(img2_transp, img1_transp)
@@ -51,6 +54,13 @@ class TestMhd(unittest.TestCase):
 
 
     def test_mhd22(self):
+        '''
+        Calculates distances manually
+        and compares that the used function in the
+        program returns the same value.
+
+        This is for a set of matrices.
+        '''
         img1, img2, img1_transp, img2_transp = create_matrices()
         dist_squared = distances(img1_transp, img2_transp)
         dist_squared2 = distances(img2_transp, img1_transp)
@@ -65,6 +75,10 @@ class TestMhd(unittest.TestCase):
         self.assertEqual(d1, max_length)
 
     def test_mhd23(self):
+        '''
+        Does the same thing as test_mhd22
+        but uses mhd23 as a distance measure
+        '''
         img1, img2, img1_transp, img2_transp = create_matrices()
         dist_squared = distances(img1_transp, img2_transp)
         dist_squared2 = distances(img2_transp, img1_transp)
@@ -78,6 +92,11 @@ class TestMhd(unittest.TestCase):
         self.assertEqual(d1, function_3)
 
     def test_mhd23_without_mean(self):
+        '''
+        Does the same thing as test_mhd22
+        but uses mhd23 without mean
+        as a distance measure
+        '''
         img1, img2, img1_transp, img2_transp = create_matrices()
         dist_squared = distances(img1_transp, img2_transp)
         dist_squared2 = distances(img2_transp, img1_transp)
@@ -90,6 +109,10 @@ class TestMhd(unittest.TestCase):
         self.assertEqual(d1, function_3)
 
     def test_k_nearest(self):
+        '''
+        Checks that values returned
+        are smallest. Uses three smallest values
+        '''
         distance_list = []
         for i, image in enumerate(self.edge_training):
             distance_list.append([mhd.mhd_d22(self.edge_testing[0], image), i])
@@ -97,11 +120,22 @@ class TestMhd(unittest.TestCase):
         self.assertEqual(three_distances, [[0.5774284771915368, 218], [0.5774284771915368, 625], [0.5898000448436316, 951]])
 
     def test_k_nearest_with_heap_search(self):
+        '''
+        Uses a premade list of distances
+        and indexes and checks that sorting
+        the list in ascending order works
+        '''
         test_list = [[3, 2], [4, 7], [5, 10], [2, 8], [1, 9]]
         sorted_list, indexes = mhd.k_nearest_with_heap_search(5, test_list)
         self.assertEqual(sorted_list, [[1, 9], [2, 8], [3, 2], [4, 7], [5, 10]])
 
     def test_heapify_sort(self):
+        '''
+        Uses a premade list of values
+        and tests that it is transformed
+        as a heap structure and picks the
+        three smallest values from that list.
+        '''
         number_list = [3, 5, 1, 4, 6, 7]
         heapq.heapify(number_list)
         sorted_distances = heapq.nsmallest(3, number_list)
