@@ -9,6 +9,7 @@ import math
 
 
 def create_matrices():
+    '''Creates two random binary matrices of size 28x28'''
     arr1 = np.random.rand(28, 28) > 0.5
     arr2 = np.random.rand(28, 28) > 0.5
     img_1 = arr1.reshape(28, 28)
@@ -18,6 +19,9 @@ def create_matrices():
     return img_1, img_2, img1_transp, img2_transp
 
 def distances(img1, img2):
+    '''Calculates distances for two matrices in a manual way
+    e.g not using a kd-tree or other pre-built tool for distance calculations
+    '''
     dist_squared=[]
     for coord in zip(img1[0,:], img1[1,:]):
         dist_squared.append((np.sqrt((img2[0,:]-coord[0])**2+(img2[1,:]-coord[1])**2)).min())

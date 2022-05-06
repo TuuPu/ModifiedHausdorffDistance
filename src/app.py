@@ -1,5 +1,4 @@
 #pylint: disable-all
-from collections import Counter
 import random
 from tensorflow.keras.datasets import mnist # pylint: disable=E0611, E0401
 import numpy as np
@@ -7,9 +6,6 @@ from dataset import image_processing
 from distance import mhd
 from performance import performance_tests
 import matplotlib.pyplot as plt
-import matplotlib as mpl
-from matplotlib.widgets import Button
-import time
 # NOTE: Importing the mnist database takes about 7-10 seconds
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -138,41 +134,21 @@ def main():
 
     '''Used for labeling the plots'''
     k_values = [1, 3, 5, 11, 15, 21, 51, 101]
-    value_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-                  12, 13, 14, 15, 16, 17, 18, 19, 20]
     k_values_zero_to_nine = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     box_plot_secs = [1, 2, 3, 4, 5]
     bar_plot_y_axis = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
     x_axis = np.arange(len(k_values))
 
-    '''Undo comments for performance testing'''
+    '''Runs the UI using matplotlib graphs
+    Choosing 1 shows general statistics from gathered data
+    Choosing 2 shows one random image and the result of the k-nearest vote
+    Choosing 3 shows 20 random images and results of the vote
+    NOTE Both 2 and 3 use a k-value of user's choice
+    Choosing 4 shows and ASCII version of a random image (this was just for fun)
+    Choosing 5 runs the performance tests and gives updated data so general statistics (1)
+    can be performed with fresh data.
+    Choosing q quits the program.
     '''
-    py_sort_mean, heap_sort_mean, heapify_sort_mean =\
-        performance_tests.sort_time_means(edge_testing_set, edge_training_set)              
-    time_list, time_list_heap = performance_tests.calculate_times(edge_testing_set, edge_training_set)
-    percentages, d_23_percentages, d23_nm_percentages, \
-    no_edge_prctg, d23_no_edge_prctg, no_mean_no_edge_prctg = \
-        performance_tests.calculate_all_accuracies(edge_testing_set, edge_training_set,
-                                                   testing_images, training_images,
-                                                   selected_test_labels)
-    '''
-
-    '''Prints to get updated data'''
-    '''
-    print("pysort mean", py_sort_mean)
-    print("heap  sort mean", heap_sort_mean)
-    print("Heapify sort mean", heapify_sort_mean)
-    print("Time list", time_list)
-    print("Time  list heap", time_list_heap)
-    print("percentages", percentages)
-    print("d23 percentages", d_23_percentages)
-    print("d23 nm percentages", d23_nm_percentages)
-    print("no edge percentage", no_edge_prctg)
-    print("d23 no edge", d23_no_edge_prctg)
-    print("no mean no edge", no_mean_no_edge_prctg)
-    '''
-
-    '''Runs the UI using matplotlib graphs'''
     running = True
     while (running):
         print("What do you want to see?")
@@ -180,6 +156,7 @@ def main():
         print("2: Test a random number")
         print("3: Run a loop of 20 random numbers")
         print("4: ASCII gorgeousness")
+        print("5: Run performance tests (takes about an hour)")
         print("q: Quit program")
         operation = input("Select one: ")
 
@@ -225,21 +202,36 @@ def main():
             axs[1, 1].set_yticks(bar_plot_y_axis)
             axs[1, 1].legend(['D22', 'D23', 'D23 no mean'], loc='lower right')
             axs[1, 1].set_title("Accuracy with binary images")
-            axs[1, 2].set_visible(False)
+            axs[1, 2].set_axis_off()
+            axs[1, 2].annotate(' k-values represent the amount of '
+                                'closest neighbours chosen. \n For example k=5 picks five'
+                                ' of the closest \n distances to vote from. Voting means'
+                                ' that if k=5 \n and those five shortest distances \n'
+                               ' represent numbers'
+                                ' 3, 5, 3, 3, 5. \n Then 3 is chosen as an output of the'
+                                ' program.', (0.1, 0.5), xycoords='axes fraction', va='center')
             plt.show()
 
         elif operation == '2':
+            while True:
+                try:
+                    k = int(input("Choose a k value (preferably an odd number):"))
+                    k_list = range(int(k)+1)
+                except ValueError:
+                    print("Please enter a valid integer")
+                    continue
+                break
             rand_val = random.randint(0, 9785)
             fig, axs = plt.subplots(2)
             axs[0].imshow(testing_images[rand_val])
             distance_list = performance_tests.calculate_distances_for_set \
                 (testing_images[rand_val], training_images)
             sorted_list, indexes = \
-                mhd.k_nearest_with_heap_search(20, distance_list)
+                mhd.k_nearest_with_heap_search(int(k), distance_list)
             labels, label, label_amount = performance_tests.get_labels(indexes)
             axs[1].bar(label_amount.keys(), label_amount.values())
             axs[1].set_xticks(k_values_zero_to_nine)
-            axs[1].set_yticks(value_list)
+            axs[1].set_yticks(k_list)
             axs[0].set_title("number {}".format(selected_test_labels[rand_val]))
             axs[1].set_title("test number {}".format("vote"))
             fig.tight_layout()
@@ -247,6 +239,14 @@ def main():
 
         elif operation == '3':
             fig, axs = plt.subplots(2)
+            while True:
+                try:
+                    k = int(input("Choose a k value (preferably an odd number):"))
+                    k_list = range(int(k)+1)
+                except ValueError:
+                    print("Please enter a valid integer")
+                    continue
+                break
             for i in range(20):
                 axs[0].cla()
                 axs[1].cla()
@@ -255,11 +255,11 @@ def main():
                 distance_list = performance_tests.calculate_distances_for_set \
                     (testing_images[rand_val], training_images)
                 sorted_list, indexes = \
-                    mhd.k_nearest_with_heap_search(20, distance_list)
+                    mhd.k_nearest_with_heap_search(int(k), distance_list)
                 labels, label, label_amount = performance_tests.get_labels(indexes)
                 axs[1].bar(label_amount.keys(), label_amount.values())
                 axs[1].set_xticks(k_values_zero_to_nine)
-                axs[1].set_yticks(value_list)
+                axs[1].set_yticks(k_list)
                 axs[0].set_title("number {}".format(selected_test_labels[rand_val]))
                 axs[1].set_title("test number {}".format("vote"))
                 fig.tight_layout()
@@ -268,6 +268,28 @@ def main():
         elif operation == '4':
             rand_val = random.randint(0, 9785)
             print(testing_images[rand_val])
+
+        elif operation == '5':
+            py_sort_mean, heap_sort_mean, heapify_sort_mean = \
+                performance_tests.sort_time_means(edge_testing_set, edge_training_set)
+            time_list, time_list_heap = performance_tests.calculate_times(edge_testing_set, edge_training_set)
+            percentages, d_23_percentages, d23_nm_percentages, \
+            no_edge_prctg, d23_no_edge_prctg, no_mean_no_edge_prctg = \
+                performance_tests.calculate_all_accuracies(edge_testing_set, edge_training_set,
+                                                           testing_images, training_images,
+                                                           selected_test_labels)
+            print("pysort mean", py_sort_mean)
+            print("heap  sort mean", heap_sort_mean)
+            print("Heapify sort mean", heapify_sort_mean)
+            print("Time list", time_list)
+            print("Time  list heap", time_list_heap)
+            print("percentages", percentages)
+            print("d23 percentages", d_23_percentages)
+            print("d23 nm percentages", d23_nm_percentages)
+            print("no edge percentage", no_edge_prctg)
+            print("d23 no edge", d23_no_edge_prctg)
+            print("no mean no edge", no_mean_no_edge_prctg)
+
         elif operation == 'q':
             running = False
         else:

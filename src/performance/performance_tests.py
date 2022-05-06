@@ -18,12 +18,16 @@ def calculate_distances_for_set(test_image, training_image_set):
     return distance_list
 
 def calculate_distances_for_set_mhd23(test_image, training_image_set):
+    '''Calculates distances for a test image against 10k
+    training images using D23 as a distance calculation method'''
     distance_list = []
     for i, image in enumerate(training_image_set):
         distance_list.append([mhd.mhd_d23(test_image, image), i])
     return distance_list
 
 def calculate_distancses_for_set_mhd23_wo_mean(test_image, training_image_set):
+    '''Calculates distances for a test image against 10k
+    training images using D23 w/o mean as a distance calculation method'''
     distance_list = []
     for i, image in enumerate(training_image_set):
         distance_list.append([mhd.mhd_d23_without_mean(test_image, image), i])
@@ -145,9 +149,9 @@ def sort_time_means(edge_testing_set, edge_training_set):
 def calculate_times(edge_testing_set, edge_training_set):
     '''
     Calculates time for distance calculations
-    :param edge_testing_set:
-    :param edge_training_set:
-    :return:
+    :param edge_testing_set: images from testing set
+    :param edge_training_set: images from training set
+    :return: time it took to calculate distances per iteration with and without heap
     '''
     time_list = []
     time_list_heap = []
